@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VENA - Plataforma Integral de Cirugía Vascular</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i>
+                    <h1>VENA</h1>
+                    <span class="tagline">Cirugía Vascular Integral</span>
+                </div>
+                <nav class="nav">
+                    <ul class="nav-list">
+                        <li><a href="#modules" class="nav-link">Módulos</a></li>
+                        <li><a href="#features" class="nav-link">Características</a></li>
+                        <li><a href="#about" class="nav-link">Acerca de</a></li>
+                        <li><a href="#contact" class="nav-link">Contacto</a></li>
+                    </ul>
+                    <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="hero-particles"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Plataforma Integral de 
+                    <span class="gradient-text">Cirugía Vascular</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Herramientas clínicas especializadas, calculadoras médicas y sistemas de evaluación 
+                    basados en evidencia científica para profesionales de la cirugía vascular
+                </p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">18</span>
+                        <span class="stat-label">Módulos Especializados</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Calculadoras Médicas</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Basado en Evidencia</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="scrollToModules()">
+                        <i class="fas fa-rocket"></i>
+                        Explorar Módulos
+                    </button>
+                    <button class="btn-secondary" onclick="openDocumentation()">
+                        <i class="fas fa-book"></i>
+                        Documentación
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-arrow">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section id="modules" class="modules">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Módulos Especializados</h2>
+                <p class="section-subtitle">
+                    Herramientas profesionales organizadas por especialidad médica
+                </p>
+            </div>
+            
+            <!-- Filter Navigation -->
+            <div class="filter-nav">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="evaluation">Evaluación</button>
+                <button class="filter-btn" data-filter="scores">Puntuaciones</button>
+                <button class="filter-btn" data-filter="tools">Herramientas</button>
+                <button class="filter-btn" data-filter="questionnaires">Cuestionarios</button>
+            </div>
+
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Evaluation & Diagnosis -->
+                <div class="module-card" data-category="evaluation">
+                    <div class="card-header">
+                        <div class="card-icon evaluation">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3>Aneurismas Venosos</h3>
+                        <span class="card-badge">Evaluación</span>
+                    </div>
+                    <p class="card-description">
+                        Gestión completa de aneurismas venosos raros con protocolos basados en evidencia científica
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Casos Clínicos</span>
+                        <span class="feature-tag">Algoritmos</span>
+                        <span class="feature-tag">Referencias</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('aneurismas-venosos')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="tools">
+                    <div class="card-header">
+                        <div class="card-icon tools">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3>AngioJet System</h3>
+                        <span class="card-badge">Herramientas</span>
+                    </div>
+                    <p class="card-description">
+                        Sistema completo de trombectomía reolítica con calculadoras, protocolos y evidencia científica
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Calculadoras</span>
+                        <span class="feature-tag">Protocolos</span>
+                        <span class="feature-tag">Meta-análisis</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('angiojet')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="scores">
+                    <div class="card-header">
+                        <div class="card-icon scores">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Score Villalta</h3>
+                        <span class="card-badge">Puntuaciones</span>
+                    </div>
+                    <p class="card-description">
+                        Evaluación del síndrome post-trombótico con calculadora automática y interpretación clínica
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Automático</span>
+                        <span class="feature-tag">Validado</span>
+                        <span class="feature-tag">PDF Export</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('villalta')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="scores">
+                    <div class="card-header">
+                        <div class="card-icon scores">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>VCSS Score</h3>
+                        <span class="card-badge">Puntuaciones</span>
+                    </div>
+                    <p class="card-description">
+                        Venous Clinical Severity Score para evaluación integral de la enfermedad venosa crónica
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Estándar Oro</span>
+                        <span class="feature-tag">Seguimiento</span>
+                        <span class="feature-tag">Internacional</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('vcss')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="scores">
+                    <div class="card-header">
+                        <div class="card-icon scores">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>Score Caprini</h3>
+                        <span class="card-badge">Puntuaciones</span>
+                    </div>
+                    <p class="card-description">
+                        Evaluación del riesgo trombótico con estratificación automática y recomendaciones profilácticas
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Riesgo TEV</span>
+                        <span class="feature-tag">Profilaxis</span>
+                        <span class="feature-tag">Guidelines</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('caprini')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="tools">
+                    <div class="card-header">
+                        <div class="card-icon tools">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3>TVP Management</h3>
+                        <span class="card-badge">Herramientas</span>
+                    </div>
+                    <p class="card-description">
+                        Manejo integral de la trombosis venosa profunda con algoritmos diagnósticos y terapéuticos
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Diagnóstico</span>
+                        <span class="feature-tag">Tratamiento</span>
+                        <span class="feature-tag">Seguimiento</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('tvp')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="evaluation">
+                    <div class="card-header">
+                        <div class="card-icon evaluation">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Tipos de Úlcera</h3>
+                        <span class="card-badge">Evaluación</span>
+                    </div>
+                    <p class="card-description">
+                        Clasificación diferencial y protocolo de tratamiento para úlceras vasculares
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Diferencial</span>
+                        <span class="feature-tag">Tratamiento</span>
+                        <span class="feature-tag">Imágenes</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('tipos-ulcera')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="questionnaires">
+                    <div class="card-header">
+                        <div class="card-icon questionnaires">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>Cuestionario Várices</h3>
+                        <span class="card-badge">Cuestionarios</span>
+                    </div>
+                    <p class="card-description">
+                        Evaluación clínica estructurada de várices con scoring automático y recomendaciones
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Síntomas</span>
+                        <span class="feature-tag">Calidad Vida</span>
+                        <span class="feature-tag">Structured</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('cuestionario-varices')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="scores">
+                    <div class="card-header">
+                        <div class="card-icon scores">
+                            <i class="fas fa-user-injured"></i>
+                        </div>
+                        <h3>Score Fragilidad</h3>
+                        <span class="card-badge">Puntuaciones</span>
+                    </div>
+                    <p class="card-description">
+                        Valoración de fragilidad perioperatoria con estratificación de riesgo quirúrgico
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Perioperatorio</span>
+                        <span class="feature-tag">Riesgo</span>
+                        <span class="feature-tag">Geriátrico</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('score-fragilidad')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="tools">
+                    <div class="card-header">
+                        <div class="card-icon tools">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </div>
+                        <h3>Stent May-Turner</h3>
+                        <span class="card-badge">Herramientas</span>
+                    </div>
+                    <p class="card-description">
+                        Protocolo completo para el tratamiento del síndrome de compresión de May-Turner
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Endovascular</span>
+                        <span class="feature-tag">Protocolo</span>
+                        <span class="feature-tag">Técnica</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('stent-may-turner')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="evaluation">
+                    <div class="card-header">
+                        <div class="card-icon evaluation">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <h3>Vasculitis General</h3>
+                        <span class="card-badge">Evaluación</span>
+                    </div>
+                    <p class="card-description">
+                        Diagnóstico integral de vasculitis con algoritmos, criterios y clasificación actualizada
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">Diagnóstico</span>
+                        <span class="feature-tag">Criterios</span>
+                        <span class="feature-tag">Actualizado</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('vasculitis-general')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+
+                <div class="module-card" data-category="scores">
+                    <div class="card-header">
+                        <div class="card-icon scores">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <h3>Score Sangrado</h3>
+                        <span class="card-badge">Puntuaciones</span>
+                    </div>
+                    <p class="card-description">
+                        Evaluación del riesgo hemorrágico con múltiples escalas validadas y recomendaciones
+                    </p>
+                    <div class="card-features">
+                        <span class="feature-tag">HAS-BLED</span>
+                        <span class="feature-tag">CRUSADE</span>
+                        <span class="feature-tag">Múltiple</span>
+                    </div>
+                    <button class="card-btn" onclick="openModule('score-sangrado')">
+                        <i class="fas fa-external-link-alt"></i>
+                        Abrir Módulo
+                    </button>
+                </div>
+            </div>
+
+            <div class="load-more">
+                <button class="btn-secondary" id="loadMoreBtn">
+                    <i class="fas fa-plus"></i>
+                    Ver Más Módulos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Características Principales</h2>
+                <p class="section-subtitle">
+                    Tecnología médica avanzada diseñada para profesionales
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Diseño Responsive</h3>
+                    <p>Optimizado para dispositivos móviles, tablets y escritorio con experiencia fluida en cualquier pantalla</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h3>Cálculos Automáticos</h3>
+                    <p>Algoritmos médicos validados con cálculos instantáneos y resultados interpretados automáticamente</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Privacidad Total</h3>
+                    <p>Datos almacenados localmente sin transmisión externa. Cumple con normativas de privacidad médica</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Exportación PDF</h3>
+                    <p>Genera reportes profesionales en PDF con resultados, interpretaciones y recomendaciones clínicas</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>Modo Offline</h3>
+                    <p>Funcionalidad completa sin conexión a internet. Ideal para entornos hospitalarios con conectividad limitada</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Basado en Evidencia</h3>
+                    <p>Todos los algoritmos basados en guías internacionales, meta-análisis y consensos de sociedades científicas</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Desarrollado por Médicos, para Médicos</h2>
+                    <p>
+                        VENA nace de la necesidad real de contar con herramientas clínicas especializadas, 
+                        accesibles y confiables en el día a día de la práctica médica vascular. Cada módulo 
+                        ha sido diseñado y validado por profesionales activos en cirugía vascular.
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">5+</span>
+                            <span class="stat-label">Años de Desarrollo</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">100+</span>
+                            <span class="stat-label">Referencias Científicas</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">24/7</span>
+                            <span class="stat-label">Disponibilidad</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="medical-illustration">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Contacto y Soporte</h2>
+                <p class="section-subtitle">
+                    ¿Tienes sugerencias o necesitas ayuda? Estamos aquí para apoyarte
+                </p>
+            </div>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fab fa-github"></i>
+                        </div>
+                        <h3>Repositorio</h3>
+                        <p>Código abierto disponible en GitHub</p>
+                        <a href="https://github.com/rico100100/vena" target="_blank" class="contact-link">
+                            github.com/rico100100/vena
+                        </a>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-bug"></i>
+                        </div>
+                        <h3>Issues & Sugerencias</h3>
+                        <p>Reporta problemas o sugiere mejoras</p>
+                        <a href="https://github.com/rico100100/vena/issues" target="_blank" class="contact-link">
+                            GitHub Issues
+                        </a>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3>Documentación</h3>
+                        <p>Guías completas de uso y desarrollo</p>
+                        <a href="#" class="contact-link">
+                            Ver Documentación
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i>
+                        <span>VENA</span>
+                    </div>
+                    <p>Plataforma integral de cirugía vascular desarrollada por profesionales médicos</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Plataforma</h4>
+                        <ul>
+                            <li><a href="#modules">Módulos</a></li>
+                            <li><a href="#features">Características</a></li>
+                            <li><a href="#about">Acerca de</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Desarrolladores</h4>
+                        <ul>
+                            <li><a href="https://github.com/rico100100/vena" target="_blank">GitHub</a></li>
+                            <li><a href="https://github.com/rico100100/vena/issues" target="_blank">Issues</a></li>
+                            <li><a href="#" target="_blank">Documentación</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#">Licencia MIT</a></li>
+                            <li><a href="#">Privacidad</a></li>
+                            <li><a href="#">Términos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 VENA Platform. Desarrollado con ❤️ por cirujanos vasculares.</p>
+                <p class="disclaimer">
+                    <strong>Descargo:</strong> Herramienta de apoyo clínico. No reemplaza el criterio médico profesional.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
