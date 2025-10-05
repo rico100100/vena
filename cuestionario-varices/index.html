@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuestionarios Venosos · Interactivo + Interpretación</title>
+<meta name="color-scheme" content="light dark">
+<style>
+  :root{
+    --bg: radial-gradient(1200px 800px at 20% 10%, rgba(99,102,241,.18), transparent 60%),
+          radial-gradient(900px 600px at 80% 30%, rgba(56,189,248,.18), transparent 60%),
+          linear-gradient(180deg, #0b1020, #0e1329 60%, #0b1020);
+    --card: rgba(255,255,255,.07);
+    --border: rgba(255,255,255,.14);
+    --text: #E8EDF7;
+    --muted: #A9B3C9;
+    --accent: #7DD3FC;
+    --accent2:#A78BFA;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --ok:#34D399;
+    --mid:#F59E0B;
+    --bad:#F87171;
+  }
+  @supports (color: color(display-p3 1 1 1)){
+    :root{ --text: color(display-p3 .92 .95 .99); --muted: color(display-p3 .69 .73 .82) }
+  }
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body{ height: 100%; }
+  body{
+    margin:0; background: var(--bg), #0b1020; color: var(--text);
+    font: 16px/1.45 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Inter, Arial;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{ max-width: 1100px; margin: 28px auto; padding: 0 16px; }
+  header.title{ display:flex; align-items:center; justify-content:space-between; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+  header.title h1{ margin:0; font-size: clamp(22px, 4vw, 34px);
+    background: linear-gradient(92deg, #fff, #d7ecff 40%, #cbb9ff);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 18px rgba(125,211,252,.18);
+  }
+  .controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .select, .btn{
+    background: var(--card); border: 1px solid var(--border);
+    color: var(--text); border-radius: 999px; padding: 10px 14px;
+    box-shadow: var(--shadow); font-size: 14px;
+  }
+  .btn{ cursor: pointer; }
+  .btn:active{ transform: translateY(1px); }
+  .pill{ font-size: 12px; padding: 6px 10px; border-radius:999px; border: 1px dashed var(--border); color: var(--muted); }
+
+  .card{
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: clip; box-shadow: var(--shadow);
+    backdrop-filter: blur(8px) saturate(120%); -webkit-backdrop-filter: blur(8px) saturate(120%);
+    margin-bottom: 18px;
+  }
+  .card header{ display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding: 12px 14px; border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+  }
+  .card header h2{ margin:0; font-size: 16px; letter-spacing:.3px; }
+  .score{ display:flex; gap:10px; align-items:center; }
+  .score .val{ font-weight: 800; font-size: 18px; padding:4px 10px; border-radius: 10px;
+    border: 1px solid var(--border); background: rgba(0,0,0,.15); }
+
+  table{ width:100%; border-collapse: separate; border-spacing:0; }
+  th, td{ padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.09); vertical-align: top; font-size: 14px; }
+  thead th{ position: sticky; top: 0; background: rgba(18,24,46,.9); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index:1; }
+  tbody tr:hover td{ background: rgba(255,255,255,.03); }
+  .muted{ color: var(--muted); }
+  .group{ margin: 10px 12px 14px; border: 1px dashed var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+  .group h3{ margin:0; padding: 10px 12px; font-size: 14px; text-transform: uppercase;
+    border-bottom: 1px dashed var(--border);
+    background: linear-gradient(90deg, rgba(125,211,252,.18), rgba(167,139,250,.16)); }
+
+  .note, .abbr, .apa{
+    margin-top: 18px; padding: 12px 14px; border-radius: var(--radius);
+    border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow);
+    font-size: 14px;
+  }
+  .abbr ul{ margin:0; padding-left: 18px; }
+  .apa ol{ margin: 0 0 0 18px; }
+
+  .interpret{
+    margin: 0 12px 14px; padding: 12px 14px; border:1px solid var(--border);
+    border-radius: var(--radius-sm); background: rgba(255,255,255,.06);
+  }
+  .tag{ display:inline-block; font-size:12px; padding: 2px 8px; border-radius: 999px; border:1px solid var(--border); margin-left:8px; }
+  .g{ color: var(--ok); border-color: rgba(52,211,153,.45); }
+  .m{ color: var(--mid); border-color: rgba(245,158,11,.45); }
+  .s{ color: var(--bad); border-color: rgba(248,113,113,.45); }
+
+  .hidden{ display:none !important; }
+  .no-print{}
+
+  /* Print B/N solo cuestionario seleccionado */
+  @media print {
+    *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body{ background:#fff !important; color:#000 !important; }
+    header.title, .controls, .note, .abbr, .apa{ display:none !important; }
+    .card, .group, .interpret{ background:#fff !important; border-color:#000 !important; box-shadow:none !important; }
+    thead th{ background:#fff !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="title">
+      <h1>Cuestionarios Venosos · Interactivo</h1>
+      <div class="controls">
+        <select id="selector" class="select" aria-label="Seleccionar cuestionario">
+          <option value="vvsymq">VVSymQ (síntomas diarios)</option>
+          <option value="avvq">AVVQ (varices · calidad de vida)</option>
+          <option value="civiq">CIVIQ‑20 (insuficiencia venosa crónica)</option>
+        </select>
+        <button class="btn" id="btnReset">Reiniciar</button>
+        <button class="btn" id="btnPrint">Imprimir en B/N</button>
+        <span class="pill">iOS friendly · auto‑cálculo · interpretación</span>
+      </div>
+    </header>
+
+    <!-- VVSymQ -->
+    <section id="card-vvsymq" class="card">
+      <header>
+        <h2>VVSymQ · Varicose Vein Symptom Questionnaire</h2>
+        <div class="score">Puntuación (0–25): <span class="val" id="score-vvsymq">0</span></div>
+      </header>
+      <div class="group">
+        <h3>Indicación</h3>
+        <table>
+          <thead><tr><th>Ítem (últimas 24 h)</th><th>Duración del síntoma</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Pesadez</td>
+              <td class="scale">
+                <label><input type="radio" name="v1" value="0" checked> Ninguna</label>
+                <label><input type="radio" name="v1" value="1"> Poco tiempo</label>
+                <label><input type="radio" name="v1" value="2"> Parte del tiempo</label>
+                <label><input type="radio" name="v1" value="3"> Buena parte</label>
+                <label><input type="radio" name="v1" value="4"> Casi todo</label>
+                <label><input type="radio" name="v1" value="5"> Todo el tiempo</label>
+              </td>
+            </tr>
+            <tr>
+              <td>Dolor sordo (achiness)</td>
+              <td class="scale">
+                <label><input type="radio" name="v2" value="0" checked> Ninguna</label>
+                <label><input type="radio" name="v2" value="1"> Poco tiempo</label>
+                <label><input type="radio" name="v2" value="2"> Parte del tiempo</label>
+                <label><input type="radio" name="v2" value="3"> Buena parte</label>
+                <label><input type="radio" name="v2" value="4"> Casi todo</label>
+                <label><input type="radio" name="v2" value="5"> Todo el tiempo</label>
+              </td>
+            </tr>
+            <tr>
+              <td>Hinchazón (edema)</td>
+              <td class="scale">
+                <label><input type="radio" name="v3" value="0" checked> Ninguna</label>
+                <label><input type="radio" name="v3" value="1"> Poco tiempo</label>
+                <label><input type="radio" name="v3" value="2"> Parte del tiempo</label>
+                <label><input type="radio" name="v3" value="3"> Buena parte</label>
+                <label><input type="radio" name="v3" value="4"> Casi todo</label>
+                <label><input type="radio" name="v3" value="5"> Todo el tiempo</label>
+              </td>
+            </tr>
+            <tr>
+              <td>Latido (throbbing)</td>
+              <td class="scale">
+                <label><input type="radio" name="v4" value="0" checked> Ninguna</label>
+                <label><input type="radio" name="v4" value="1"> Poco tiempo</label>
+                <label><input type="radio" name="v4" value="2"> Parte del tiempo</label>
+                <label><input type="radio" name="v4" value="3"> Buena parte</label>
+                <label><input type="radio" name="v4" value="4"> Casi todo</label>
+                <label><input type="radio" name="v4" value="5"> Todo el tiempo</label>
+              </td>
+            </tr>
+            <tr>
+              <td>Picor</td>
+              <td class="scale">
+                <label><input type="radio" name="v5" value="0" checked> Ninguna</label>
+                <label><input type="radio" name="v5" value="1"> Poco tiempo</label>
+                <label><input type="radio" name="v5" value="2"> Parte del tiempo</label>
+                <label><input type="radio" name="v5" value="3"> Buena parte</label>
+                <label><input type="radio" name="v5" value="4"> Casi todo</label>
+                <label><input type="radio" name="v5" value="5"> Todo el tiempo</label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="interpret" id="interp-vvsymq">
+        <strong>Interpretación:</strong> VVSymQ evalúa la frecuencia de 5 síntomas en 24 h. <em>Mayor puntuación = mayor severidad.</em>
+        <span class="tag g" id="tag-vvsymq">leve</span>
+        <div class="muted">Guía orientativa: 0–8 leve, 9–16 moderado, 17–25 severo. Úsese para comparación pre/post (media semanal).</div>
+      </div>
+    </section>
+
+    <!-- AVVQ -->
+    <section id="card-avvq" class="card hidden">
+      <header>
+        <h2>AVVQ · Aberdeen Varicose Vein Questionnaire</h2>
+        <div class="score">Índice 0–100: <span class="val" id="score-avvq">0.0</span></div>
+      </header>
+      <div class="group">
+        <h3>Impacto en las últimas 2 semanas</h3>
+        <table>
+          <thead><tr><th>Ítem</th><th>Respuesta</th></tr></thead>
+          <tbody id="avvq-rows"></tbody>
+        </table>
+      </div>
+      <div class="interpret" id="interp-avvq">
+        <strong>Interpretación:</strong> Índice 0–100 (mayor = peor impacto en calidad de vida).
+        <span class="tag g" id="tag-avvq">leve</span>
+        <div class="muted">Guía orientativa: &lt;15 leve, 15–30 moderado, &gt;30 severo. Útil para severidad basal y cambio tras tratamiento.</div>
+      </div>
+    </section>
+
+    <!-- CIVIQ-20 -->
+    <section id="card-civiq" class="card hidden">
+      <header>
+        <h2>CIVIQ‑20 · Chronic Venous Insufficiency Quality of Life</h2>
+        <div class="score">Índice 0–100: <span class="val" id="score-civiq">0.0</span></div>
+      </header>
+      <div class="group">
+        <h3>Frecuencia/Intensidad (4 semanas)</h3>
+        <table>
+          <thead><tr><th>Ítem</th><th>Escala Likert (1–5)</th></tr></thead>
+          <tbody id="civiq-rows"></tbody>
+        </table>
+      </div>
+      <div class="interpret" id="interp-civiq">
+        <strong>Interpretación:</strong> Índice 0–100 (menor = mejor HRQoL). Opción para invertir dirección.
+        <span class="tag g" id="tag-civiq">leve</span>
+        <div class="muted">Guía orientativa: 20–40 leve, 41–60 moderado, &gt;60 severo. Use perfiles por dominios si aplica.</div>
+      </div>
+      <div class="controls" style="padding: 0 14px 14px;">
+        <label class="scale"><input type="checkbox" id="invert-civiq"> Invertir dirección (mayor = mejor)</label>
+      </div>
+    </section>
+
+    <section class="abbr">
+      <h3>Abreviaturas</h3>
+      <ul>
+        <li><strong>VVSymQ</strong>: Varicose Vein Symptom Questionnaire.</li>
+        <li><strong>AVVQ</strong>: Aberdeen Varicose Vein Questionnaire.</li>
+        <li><strong>CIVIQ</strong>: Chronic Venous Insufficiency Quality of Life Questionnaire.</li>
+        <li><strong>PRO</strong>: <em>Patient‑Reported Outcome</em> (resultado informado por el paciente).</li>
+        <li><strong>HRQoL</strong>: <em>Health‑Related Quality of Life</em>.</li>
+        <li><strong>IVC</strong>: Insuficiencia venosa crónica.</li>
+      </ul>
+    </section>
+
+    <section class="apa">
+      <h3>Referencias (APA 7)</h3>
+      <ol>
+        <li>Garratt, A. M., Macdonald, L. M., Ruta, D. A., Russell, I. T., Buckingham, J. K., &amp; Krukowski, Z. H. (1993). Towards measurement of outcome for patients with varicose veins. <em>Quality in Health Care, 2</em>(1), 5–10. https://doi.org/10.1136/qshc.2.1.5</li>
+        <li>Launois, R., Reboul‑Marty, J., &amp; Henry, B. (1996). Construction and validation of a quality of life questionnaire in chronic lower limb venous insufficiency (CIVIQ). <em>Quality of Life Research, 5</em>(6), 539–554. https://doi.org/10.1007/BF00439228</li>
+        <li>Paty, J., Turner‑Bowker, D. M., Elash, C. A., &amp; Wright, D. (2015). The VVSymQ® instrument: Use of a new patient‑reported outcome measure for assessment of varicose vein symptoms. <em>Phlebology, 31</em>(7), 481–488. https://doi.org/10.1177/0268355515595193</li>
+      </ol>
+    </section>
+  </div>
+
+<script>
+  // Construcción dinámica de AVVQ y CIVIQ
+  const avvqItems = [
+    "Dolor en las piernas",
+    "Hinchazón de tobillos",
+    "Sensación de pesadez",
+    "Picor/irritación cutánea",
+    "Dificultad para estar de pie tiempo prolongado",
+    "Interferencia con trabajo/actividades domésticas",
+    "Limitación para el ocio/ejercicio",
+    "Preocupación estética",
+    "Uso de medias de compresión",
+    "Necesidad de analgésicos",
+    "Alteración del sueño por molestias",
+    "Impacto social (salir, relaciones)",
+    "Molestias al final del día"
+  ];
+  const civiqItems = [
+    "Dolor en piernas", "Sensación de pesadez", "Calambres", "Hormigueo",
+    "Quemazón", "Inquietud de piernas", "Molestias al estar de pie",
+    "Limitación al caminar", "Dificultad subir escaleras", "Fatiga general",
+    "Interferencia trabajo", "Actividades domésticas", "Actividades sociales",
+    "Estado de ánimo", "Irritabilidad", "Sueño", "Autoimagen/cosmética",
+    "Necesidad de elevar piernas", "Evitar ejercicio", "Impacto global"
+  ];
+
+  function buildRows(tbodyId, namePrefix, items, minVal, maxVal, labels){
+    const tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = "";
+    items.forEach((label, idx) => {
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td"); td1.textContent = (idx+1)+". "+label;
+      const td2 = document.createElement("td");
+      const scale = document.createElement("div"); scale.className = "scale";
+      for(let v=minVal; v<=maxVal; v++){
+        const lab = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = "radio"; input.name = namePrefix + (idx+1); input.value = v;
+        if(v===minVal) input.checked = true;
+        lab.appendChild(input);
+        const span = document.createElement("span"); span.textContent = labels[v-minVal];
+        lab.appendChild(span);
+        scale.appendChild(lab);
+      }
+      td2.appendChild(scale);
+      tr.appendChild(td1); tr.appendChild(td2);
+      tbody.appendChild(tr);
+    });
+  }
+
+  buildRows("avvq-rows","a", avvqItems, 0, 4, ["Nada","Poco","Moderado","Bastante","Mucho"]);
+  buildRows("civiq-rows","c", civiqItems, 1, 5, ["1","2","3","4","5"]);
+
+  function sumValues(prefix, count, base){
+    let s = 0;
+    for(let i=1;i<=count;i++){
+      const el = document.querySelector(`input[name="${prefix}${i}"]:checked`);
+      s += (el ? Number(el.value) : base);
+    }
+    return s;
+  }
+
+  function applyTag(elTag, value, thresholds){
+    // thresholds: [{max:8,class:"g",text:"leve"}, ...]
+    for(const t of thresholds){
+      if(value <= t.max){
+        elTag.textContent = t.text;
+        elTag.className = "tag " + t.class;
+        return;
+      }
+    }
+    // fallback último
+    const last = thresholds[thresholds.length-1];
+    elTag.textContent = last.text;
+    elTag.className = "tag " + last.class;
+  }
+
+  function updateScores(){
+    // VVSymQ (0–25)
+    const v = sumValues("v", 5, 0);
+    document.getElementById("score-vvsymq").textContent = v;
+    applyTag(document.getElementById("tag-vvsymq"), v, [
+      {max:8, class:"g", text:"leve"},
+      {max:16, class:"m", text:"moderado"},
+      {max:25, class:"s", text:"severo"}
+    ]);
+
+    // AVVQ 0–4 x13 -> 0–100
+    const a = sumValues("a", 13, 0);
+    const avvqIndex = (a / (13*4)) * 100;
+    document.getElementById("score-avvq").textContent = avvqIndex.toFixed(1);
+    applyTag(document.getElementById("tag-avvq"), avvqIndex, [
+      {max:15, class:"g", text:"leve"},
+      {max:30, class:"m", text:"moderado"},
+      {max:100, class:"s", text:"severo"}
+    ]);
+
+    // CIVIQ 1–5 x20 -> (media-1)/4*100; invert opcional
+    const c = sumValues("c", 20, 1);
+    const mean = c / 20;
+    let civiqIndex = ((mean - 1) / 4) * 100;
+    if(document.getElementById("invert-civiq").checked){ civiqIndex = 100 - civiqIndex; }
+    document.getElementById("score-civiq").textContent = civiqIndex.toFixed(1);
+    applyTag(document.getElementById("tag-civiq"), civiqIndex, [
+      {max:40, class:"g", text:"leve"},
+      {max:60, class:"m", text:"moderado"},
+      {max:100, class:"s", text:"severo"}
+    ]);
+  }
+
+  document.addEventListener("change", updateScores);
+  document.getElementById("invert-civiq").addEventListener("change", updateScores);
+  updateScores();
+
+  // Selector
+  const selector = document.getElementById("selector");
+  selector.addEventListener("change", () => showCard(selector.value));
+  function showCard(which){
+    ["card-vvsymq","card-avvq","card-civiq"].forEach(id => document.getElementById(id).classList.add("hidden"));
+    document.getElementById("card-"+which).classList.remove("hidden");
+  }
+  function idFor(opt){ return opt==="vvsymq"?"vvsymq":opt==="avvq"?"avvq":"civiq"; }
+  showCard(idFor(selector.value));
+
+  // Reset
+  document.getElementById("btnReset").addEventListener("click", () => {
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    ["v1","v2","v3","v4","v5"].forEach(n => document.querySelector(`input[name="${n}"][value="0"]`).checked = true);
+    for(let i=1;i<=13;i++){ document.querySelector(`input[name="a${i}"][value="0"]`).checked = true; }
+    for(let i=1;i<=20;i++){ document.querySelector(`input[name="c${i}"][value="1"]`).checked = true; }
+    document.getElementById("invert-civiq").checked = false;
+    updateScores();
+  });
+
+  // Print solo seleccionado (B/N via @media print)
+  document.getElementById("btnPrint").addEventListener("click", () => {
+    const which = idFor(selector.value);
+    const ids = ["card-vvsymq","card-avvq","card-civiq"];
+    ids.forEach(id => document.getElementById(id).classList.add("no-print"));
+    document.getElementById("card-"+which).classList.remove("no-print");
+    window.print();
+    ids.forEach(id => document.getElementById(id).classList.remove("no-print"));
+  });
+</script>
+</body>
+</html>

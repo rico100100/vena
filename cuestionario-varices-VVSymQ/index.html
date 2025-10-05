@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de Síntomas de Varices - VVSymQ</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h2 {
+            color: #555;
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-section h3::before {
+            content: "ℹ";
+            font-size: 1.6rem;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .question-group {
+            margin-bottom: 35px;
+            padding: 30px;
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .question-group:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            border-left-color: #667eea;
+        }
+
+        .question-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .question-title::before {
+            content: "●";
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .symptom-item {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .symptom-item:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .symptom-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .symptom-icons {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: space-between;
+        }
+
+        .radio-option {
+            flex: 1;
+            min-width: 140px;
+            position: relative;
+        }
+
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .radio-option label {
+            display: block;
+            padding: 15px 10px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #495057;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .radio-option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .radio-option label:hover {
+            border-color: #667eea;
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .score-info {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(17, 153, 142, 0.3);
+            margin-top: 30px;
+        }
+
+        .result-container h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .interpretation {
+            font-size: 1.1rem;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            color: #6c757d;
+            font-size: 0.95rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .radio-group {
+                flex-direction: column;
+            }
+
+            .radio-option {
+                min-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Animaciones */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .symptom-item {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .symptom-item:nth-child(1) { animation-delay: 0.1s; }
+        .symptom-item:nth-child(2) { animation-delay: 0.2s; }
+        .symptom-item:nth-child(3) { animation-delay: 0.3s; }
+        .symptom-item:nth-child(4) { animation-delay: 0.4s; }
+        .symptom-item:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CUESTIONARIO VVSymQ®</h1>
+            <h2>Cuestionario de Síntomas de Varices</h2>
+            <p>Instrumento de Evaluación de Resultados Reportados por el Paciente</p>
+        </div>
+
+        <div class="form-container">
+            <div class="info-section">
+                <h3>Instrucciones</h3>
+                <p><strong>Desde que se despertó hoy, ¿con qué frecuencia ha tenido el siguiente problema en la pierna que va a ser tratada?</strong></p>
+                <p>Por favor, seleccione una respuesta para cada síntoma basándose en su experiencia durante el día de hoy.</p>
+            </div>
+
+            <form id="vvsymq-form">
+                <div class="question-group">
+                    <div class="question-title">
+                        Evaluación de Síntomas de Varices
+                    </div>
+
+                    <!-- Pesadez -->
+                    <div class="symptom-item">
+                        <div class="symptom-label">
+                            <span class="symptom-icons">⚖️</span>
+                            <strong>PESADEZ en la pierna</strong>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="heaviness_0" name="heaviness" value="0">
+                                <label for="heaviness_0">Ningún momento</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="heaviness_1" name="heaviness" value="1">
+                                <label for="heaviness_1">Un poco del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="heaviness_2" name="heaviness" value="2">
+                                <label for="heaviness_2">Algo del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="heaviness_3" name="heaviness" value="3">
+                                <label for="heaviness_3">Buena parte del tiempo</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="heaviness_4" name="heaviness" value="4">
+                                <label for="heaviness_4">La mayor parte del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1.02);">
+                                <input type="radio" id="heaviness_5" name="heaviness" value="5" checked="checked">
+                                <label for="heaviness_5">Todo el tiempo</label>
+                            </div>
+                        </div>
+                        <div class="score-info">Puntuación: 0-5 puntos</div>
+                    </div>
+
+                    <!-- Dolor/Molestia -->
+                    <div class="symptom-item">
+                        <div class="symptom-label">
+                            <span class="symptom-icons">🩹</span>
+                            <strong>DOLOR/MOLESTIA en la pierna</strong>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="achiness_0" name="achiness" value="0">
+                                <label for="achiness_0">Ningún momento</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="achiness_1" name="achiness" value="1">
+                                <label for="achiness_1">Un poco del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="achiness_2" name="achiness" value="2">
+                                <label for="achiness_2">Algo del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="achiness_3" name="achiness" value="3">
+                                <label for="achiness_3">Buena parte del tiempo</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="achiness_4" name="achiness" value="4">
+                                <label for="achiness_4">La mayor parte del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1.02);">
+                                <input type="radio" id="achiness_5" name="achiness" value="5" checked="checked">
+                                <label for="achiness_5">Todo el tiempo</label>
+                            </div>
+                        </div>
+                        <div class="score-info">Puntuación: 0-5 puntos</div>
+                    </div>
+
+                    <!-- Hinchazón -->
+                    <div class="symptom-item">
+                        <div class="symptom-label">
+                            <span class="symptom-icons">💧</span>
+                            <strong>HINCHAZÓN en la pierna</strong>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="swelling_0" name="swelling" value="0">
+                                <label for="swelling_0">Ningún momento</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="swelling_1" name="swelling" value="1">
+                                <label for="swelling_1">Un poco del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="swelling_2" name="swelling" value="2">
+                                <label for="swelling_2">Algo del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="swelling_3" name="swelling" value="3">
+                                <label for="swelling_3">Buena parte del tiempo</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="swelling_4" name="swelling" value="4">
+                                <label for="swelling_4">La mayor parte del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1.02);">
+                                <input type="radio" id="swelling_5" name="swelling" value="5" checked="checked">
+                                <label for="swelling_5">Todo el tiempo</label>
+                            </div>
+                        </div>
+                        <div class="score-info">Puntuación: 0-5 puntos</div>
+                    </div>
+
+                    <!-- Pulsación -->
+                    <div class="symptom-item">
+                        <div class="symptom-label">
+                            <span class="symptom-icons">💓</span>
+                            <strong>PULSACIÓN/LATIDO en la pierna</strong>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="throbbing_0" name="throbbing" value="0">
+                                <label for="throbbing_0">Ningún momento</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="throbbing_1" name="throbbing" value="1">
+                                <label for="throbbing_1">Un poco del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="throbbing_2" name="throbbing" value="2">
+                                <label for="throbbing_2">Algo del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="throbbing_3" name="throbbing" value="3">
+                                <label for="throbbing_3">Buena parte del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1.02);">
+                                <input type="radio" id="throbbing_4" name="throbbing" value="4">
+                                <label for="throbbing_4">La mayor parte del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1.02);">
+                                <input type="radio" id="throbbing_5" name="throbbing" value="5" checked="checked">
+                                <label for="throbbing_5">Todo el tiempo</label>
+                            </div>
+                        </div>
+                        <div class="score-info">Puntuación: 0-5 puntos</div>
+                    </div>
+
+                    <!-- Picazón -->
+                    <div class="symptom-item">
+                        <div class="symptom-label">
+                            <span class="symptom-icons">🔥</span>
+                            <strong>PICAZÓN en la pierna</strong>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input type="radio" id="itching_0" name="itching" value="0">
+                                <label for="itching_0">Ningún momento</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="itching_1" name="itching" value="1">
+                                <label for="itching_1">Un poco del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="itching_2" name="itching" value="2">
+                                <label for="itching_2">Algo del tiempo</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="itching_3" name="itching" value="3">
+                                <label for="itching_3">Buena parte del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1);">
+                                <input type="radio" id="itching_4" name="itching" value="4">
+                                <label for="itching_4">La mayor parte del tiempo</label>
+                            </div>
+                            <div class="radio-option" style="transform: scale(1.02);">
+                                <input type="radio" id="itching_5" name="itching" value="5" checked="checked">
+                                <label for="itching_5">Todo el tiempo</label>
+                            </div>
+                        </div>
+                        <div class="score-info">Puntuación: 0-5 puntos</div>
+                    </div>
+                </div>
+
+                <button type="button" class="calculate-btn" onclick="calculateScore()">
+                    Calcular Puntuación VVSymQ®
+                </button>
+            </form>
+
+            <div id="result-container" class="result-container">
+                <h3>Resultado VVSymQ®</h3>
+                <div class="score-display" id="total-score">25</div>
+                <p><strong>Puntuación Total: <span id="score-text">25</span> de 25 puntos</strong></p>
+                <div class="interpretation" id="interpretation">
+                    <strong>Síntomas severos (21-25 puntos):</strong><br>
+                    Los síntomas son muy frecuentes o constantes durante el día, 
+                    interfiriendo significativamente con la calidad de vida. 
+                    Se requiere evaluación y tratamiento médico urgente.
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h4>Referencias Científicas</h4>
+            <p>
+                <strong>Paty, J., Turner-Bowker, D. M., Elash, C. A., &amp; Wright, D.</strong> (2016). 
+                The VVSymQ® instrument: Use of a new patient-reported outcome measure for assessment of varicose vein symptoms. 
+                <em>Phlebology, 31</em>(7), 481-488. https://doi.org/10.1177/0268355515595193
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Wright, D. D. I., Paty, J., Turner-Bowker, D. M., &amp; Bradbury, A.</strong>
+ (2016). 
+                Psychometric evaluation of a new patient-reported 
+outcome (PRO) symptom diary for varicose veins: VVSymQ® instrument. 
+                <em>The Patient - Patient-Centered Outcomes Research, 9</em>(4), 337-348. https://doi.org/10.1007/s40271-015-0159-3
+            </p>
+            <p style="margin-top: 20px; font-size: 0.85rem;">
+                <strong>Nota:</strong> Este cuestionario debe ser utilizado como herramienta complementaria en la evaluación clínica. 
+                Los resultados no sustituyen el criterio médico profesional. VVSymQ® es una marca registrada.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const symptoms = ['heaviness', 'achiness', 'swelling', 'throbbing', 'itching'];
+            let totalScore = 0;
+            let allAnswered = true;
+
+            // Verificar que todas las preguntas estén respondidas
+            symptoms.forEach(symptom => {
+                const selected = document.querySelector(`input[name="${symptom}"]:checked`);
+                if (!selected) {
+                    allAnswered = false;
+                } else {
+                    totalScore += parseInt(selected.value);
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Por favor, responda todas las preguntas antes de calcular la puntuación.');
+                return;
+            }
+
+            // Mostrar resultado
+            document.getElementById('total-score').textContent = totalScore;
+            document.getElementById('score-text').textContent = totalScore;
+
+            // Interpretación
+            let interpretation = '';
+            let interpretationClass = '';
+
+            if (totalScore === 0) {
+                interpretation = `
+                    <strong>Sin síntomas (0 puntos):</strong><br>
+                    No se reportan síntomas de varices durante el día evaluado. 
+                    Este resultado sugiere ausencia de síntomas significativos o una respuesta excelente al tratamiento.
+                `;
+                interpretationClass = 'excellent';
+            } else if (totalScore >= 1 && totalScore <= 5) {
+                interpretation = `
+                    <strong>Síntomas mínimos (1-5 puntos):</strong><br>
+                    Se reportan síntomas leves y poco frecuentes. Los síntomas están presentes 
+                    ocasionalmente pero no interfieren significativamente con las actividades diarias.
+                `;
+                interpretationClass = 'minimal';
+            } else if (totalScore >= 6 && totalScore <= 12) {
+                interpretation = `
+                    <strong>Síntomas moderados (6-12 puntos):</strong><br>
+                    Se reportan síntomas de intensidad moderada que pueden afectar parcialmente 
+                    las actividades diarias. Podría requerirse evaluación médica especializada.
+                `;
+                interpretationClass = 'moderate';
+            } else if (totalScore >= 13 && totalScore <= 20) {
+                interpretation = `
+                    <strong>Síntomas considerables (13-20 puntos):</strong><br>
+                    Los síntomas están presentes durante una parte significativa del día y 
+                    pueden interferir considerablemente con las actividades normales. 
+                    Se recomienda evaluación médica.
+                `;
+                interpretationClass = 'considerable';
+            } else {
+                interpretation = `
+                    <strong>Síntomas severos (21-25 puntos):</strong><br>
+                    Los síntomas son muy frecuentes o constantes durante el día, 
+                    interfiriendo significativamente con la calidad de vida. 
+                    Se requiere evaluación y tratamiento médico urgente.
+                `;
+                interpretationClass = 'severe';
+            }
+
+            document.getElementById('interpretation').innerHTML = interpretation;
+            document.getElementById('result-container').classList.remove('hidden');
+
+            // Scroll suave al resultado
+            document.getElementById('result-container').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }
+
+        // Función para resetear el formulario
+        function resetForm() {
+            document.getElementById('vvsymq-form').reset();
+            document.getElementById('result-container').classList.add('hidden');
+        }
+
+        // Agregar efectos de hover dinámicos
+        document.addEventListener('DOMContentLoaded', function() {
+            const radioOptions = document.querySelectorAll('.radio-option');
+
+            radioOptions.forEach(option => {
+                option.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02)';
+                });
+
+                option.addEventListener('mouseleave', function() {
+                    if (!this.querySelector('input[type="radio"]').checked) {
+                        this.style.transform = 'scale(1)';
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

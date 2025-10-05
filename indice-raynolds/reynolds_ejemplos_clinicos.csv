@@ -1,0 +1,10 @@
+Vaso/Condición,Diámetro (cm),Velocidad (cm/s),Reynolds,Tipo de Flujo
+Aorta ascendente (reposo),2.5,25,1875,Laminar
+Aorta ascendente (ejercicio),2.5,60,4500,Turbulento
+Arteria carótida común,0.7,40,840,Laminar
+Arteria renal,0.6,35,630,Laminar
+Arteria femoral,0.8,30,720,Laminar
+Estenosis aórtica severa,0.5,180,2700,Transición
+Post-estenosis (50% oclusión),0.8,150,3600,Transición
+Arteria coronaria (LAD),0.3,20,180,Laminar
+Vena cava superior,2.0,15,900,Laminar

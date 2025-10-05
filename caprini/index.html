@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Caprini Score (TEV)</title>
+<meta name="color-scheme" content="light dark">
+<style>
+/* ========= Blue Pro Theme (visual-only) ========= */
+:root{
+  /* Base palette (azules) */
+  --blue-50:#f0f6ff; --blue-100:#e2eeff; --blue-200:#cfe3ff; --blue-300:#b3d3ff;
+  --blue-400:#80b6ff; --blue-500:#4d9aff; --blue-600:#1e7df5; --blue-700:#0f64d6;
+  --blue-800:#0b4ea8; --blue-900:#0a3e84;
+
+  --bg: linear-gradient(135deg, var(--blue-50) 0%, #ffffff 40%, #f7fbff 100%);
+  --fg: #0b1220;
+  --muted: color-mix(in oklab, var(--fg) 55%, #ffffff 45%);
+  --card: rgba(255,255,255,.85);
+  --border: color-mix(in oklab, var(--blue-900) 10%, #ffffff 90%);
+
+  --ok:#16a34a; --warn:#f59e0b; --danger:#ef4444; --info: var(--blue-700); --violet:#7c3aed;
+
+  /* Categoría colors */
+  --pt1: var(--blue-500);
+  --pt2: #10b981;       /* emerald */
+  --pt3: #f59e0b;       /* amber */
+  --pt5: #ef4444;       /* red */
+  --upd: #7c3aed;       /* violet */
+
+  --head:#0f172a;
+}
+
+/* Reset & base */
+*{ box-sizing:border-box }
+html,body{ margin:0 }
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  background: var(--bg); color: var(--fg); line-height:1.5;
+  /* Subtle noise via shadow for depth */
+  box-shadow: inset 0 100vmax rgba(13, 87, 186, 0.02);
+}
+.page{ max-width:1180px; margin:0 auto; padding:clamp(18px,3vw,30px) }
+h1{ margin:.2rem 0 .25rem }
+.lead{ opacity:.95; font-size:clamp(1rem,1rem + .35vw,1.15rem) }
+
+/* Cards & layout: glassy + blue shadow */
+.card{
+  background: var(--card);
+  backdrop-filter: saturate(125%) blur(6px);
+  -webkit-backdrop-filter: saturate(125%) blur(6px);
+  border:1px solid color-mix(in oklab, var(--blue-700) 10%, #ffffff 90%);
+  border-radius:18px;
+  padding:clamp(12px,2vw,18px);
+  box-shadow:
+    0 0 0 1px rgba(15, 100, 214, .05),
+    0 12px 28px -12px rgba(15, 100, 214, .22),
+    0 6px 16px -8px rgba(10, 62, 132, .18);
+}
+.grid{ display:grid; gap:14px }
+@media(min-width:980px){ .grid{ grid-template-columns: 2fr 1fr } }
+
+/* Header controls */
+.row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.btn{
+  appearance:none; border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+  background: linear-gradient(180deg, #ffffff, #f4f8ff);
+  color: var(--head);
+  padding:.6rem .95rem; border-radius:12px; cursor:pointer; font-weight:700;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 6px 14px -8px rgba(15,100,214,.35);
+  transition: transform .06s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.btn:hover{ border-color: color-mix(in oklab, var(--blue-700) 35%, #fff 65%); box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 10px 22px -10px rgba(15,100,214,.45) }
+.btn:active{ transform: translateY(1px) }
+.btn.primary{
+  background: linear-gradient(180deg, var(--blue-500), var(--blue-700));
+  color:#fff; border-color: transparent;
+  box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 10px 24px -12px rgba(30,125,245,.55);
+}
+.btn.danger{
+  background: linear-gradient(180deg, #fff, #fff);
+  border-color: color-mix(in oklab, var(--danger) 45%, #fff 55%);
+  color: var(--danger);
+}
+
+/* Pills / badges */
+.pill{
+  display:inline-flex; gap:.5rem; align-items:center;
+  border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  border-radius:999px; padding:.4rem .7rem;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.kbd{
+  font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  background: color-mix(in oklab, var(--blue-100) 70%, #fff 30%);
+  border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+  border-radius:6px; padding:.1rem .35rem;
+}
+
+/* Score box */
+.score{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  border:1px dashed color-mix(in oklab, var(--blue-700) 22%, #fff 78%);
+  border-radius:16px; padding:14px 16px; margin-top:10px;
+  background: linear-gradient(180deg, #ffffff, #f5f9ff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.score .val{ font-size:2rem; font-weight:900; letter-spacing:.4px; color: var(--blue-900) }
+.risk{
+  font-weight:900; padding:.28rem .6rem; border-radius:9px; border:2px solid var(--blue-400);
+  background: linear-gradient(180deg, #ffffff, #eef6ff);
+}
+.risk.low{ border-color:#16a34a }
+.risk.mod{ border-color:#f59e0b }
+.risk.high{ border-color:#f97316 }
+.risk.vhigh{ border-color:#ef4444 }
+
+.note{ font-size:.95rem }
+.muted{ color: color-mix(in oklab, var(--fg) 62%, #ffffff 38%) }
+.foot{ font-size:.9rem; opacity:.95 }
+
+/* Section headers with color tabs */
+.section{ margin-top:16px }
+.section h2{
+  margin:0 0 .7rem; font-size:1.06rem; display:flex; align-items:center; gap:.6rem;
+}
+.tab{
+  display:inline-flex; align-items:center; gap:.5rem; font-size:.92rem;
+  padding:.28rem .6rem; border-radius:999px;
+  border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+  background: linear-gradient(180deg, #ffffff, #f5f9ff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.tab .dot{ width:10px; height:10px; border-radius:999px; box-shadow: 0 0 0 2px #fff inset, 0 0 0 1px rgba(0,0,0,.06) }
+.c1 .dot{ background: var(--pt1) } .c2 .dot{ background: var(--pt2) }
+.c3 .dot{ background: var(--pt3) } .c5 .dot{ background: var(--pt5) }
+.cupd .dot{ background: var(--upd) }
+
+/* Checklist / radios */
+.list{ display:grid; gap:10px }
+@media(min-width:720px){ .list{ grid-template-columns: 1fr 1fr } }
+@media(min-width:1100px){ .list{ grid-template-columns: 1fr 1fr 1fr } }
+
+.item{
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 14px;
+  border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  border-radius:14px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  position:relative;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.9) inset,
+    0 10px 18px -14px rgba(15,100,214,.35);
+  transition: border-color .15s ease, transform .06s ease, box-shadow .2s ease;
+}
+.item:hover{
+  border-color: color-mix(in oklab, var(--blue-700) 30%, #fff 70%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 16px 28px -14px rgba(15,100,214,.45);
+}
+.item:active{ transform: translateY(1px) }
+.item small{ color: color-mix(in oklab, var(--fg) 55%, #ffffff 45%) }
+.item[aria-disabled="true"]{ opacity:.55; pointer-events:none }
+
+.cb{ position:relative; width:22px; height:22px; flex:0 0 22px }
+.cb input{
+  appearance:none; -webkit-appearance:none; width:22px; height:22px; margin:0; border-radius:7px;
+  border:1.6px solid color-mix(in oklab, var(--blue-700) 24%, #fff 76%);
+  background: linear-gradient(180deg, #ffffff, #f3f8ff); cursor:pointer; display:grid; place-items:center;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+  transition: border-color .15s ease, background .15s ease, transform .06s ease;
+}
+.cb input:hover{ border-color: color-mix(in oklab, var(--blue-700) 40%, #fff 60%) }
+.cb input:focus-visible{
+  outline: 3px solid color-mix(in oklab, var(--blue-500) 60%, #fff 40%);
+  outline-offset: 2px;
+}
+.cb input:checked{
+  background: linear-gradient(180deg, var(--blue-500), var(--blue-700));
+  border-color: var(--blue-700);
+  box-shadow: 0 1px 0 rgba(255,255,255,.35) inset, 0 0 0 3px rgba(77,154,255,.18);
+}
+.cb input::after{
+  content:""; width:12px; height:12px; transform:scale(0); transition:.14s transform ease-out;
+  clip-path: path("M8.6 13.2 5.1 9.6 3.7 10.9 8.6 16 18.3 6.3 17 5z"); background:#fff;
+}
+.cb input:checked::after{ transform:scale(1.05) }
+.pts{ margin-left:auto; font-weight:800; color: var(--blue-900) }
+
+.radio-grid{ display:grid; gap:10px }
+@media(min-width:720px){ .radio-grid{ grid-template-columns: repeat(4,1fr) } }
+.radio{
+  padding:12px 14px; border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  border-radius:14px; display:flex; gap:10px; align-items:center;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 10px 18px -14px rgba(15,100,214,.3);
+}
+.radio input{
+  width:18px; height:18px; accent-color: var(--blue-700);
+  filter: drop-shadow(0 0 0 rgba(0,0,0,0));
+}
+.radio:hover{ border-color: color-mix(in oklab, var(--blue-700) 30%, #fff 70%) }
+
+/* Counters */
+.count{
+  display:inline-flex; align-items:center; gap:.4rem; font-weight:800;
+  padding:.2rem .6rem; border-radius:999px;
+  border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  background: linear-gradient(180deg, #ffffff, #f3f8ff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.count.c1{ border-color: var(--pt1) } .count.c2{ border-color: var(--pt2) }
+.count.c3{ border-color: var(--pt3) } .count.c5{ border-color: var(--pt5) }
+.count.cupd{ border-color: var(--upd) }
+
+/* Validation */
+.alert{
+  display:none; margin-top:12px; border-left:5px solid var(--danger); padding:12px 14px;
+  background: linear-gradient(180deg, #fff5f5, #ffecec);
+  border-radius:12px; box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 8px 20px -14px rgba(239,68,68,.35);
+}
+.alert.show{ display:block }
+
+/* Print (PDF) */
+@page{
+  size: A4;
+  margin: 18mm 14mm 18mm 14mm;
+}
+@media print{
+  body{ background:#fff }
+  .page{ padding:0 }
+  .no-print{ display:none !important }
+  header.print-head{
+    display:block; margin-bottom:8mm; text-align:center;
+    border-bottom:2px solid #000; padding-bottom:4mm;
+  }
+  footer.print-foot{
+    position:fixed; bottom:8mm; left:14mm; right:14mm; font-size:.9rem;
+    display:flex; justify-content:space-between;
+  }
+  .print-pg:after{ counter-increment: page; content: counter(page) }
+}
+
+/* Focus ring general (accesible) */
+button:focus-visible, select:focus-visible {
+  outline: 3px solid color-mix(in oklab, var(--blue-500) 60%, #fff 40%);
+  outline-offset: 2px;
+}
+select{
+  background: linear-gradient(180deg, #ffffff, #f4f8ff);
+  border-radius: 10px; padding:.25rem .45rem;
+  border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <!-- Visible solo al imprimir -->
+  <header class="print-head">
+    <div style="font-weight:800; font-size:1.2rem;">Caprini Score (TEV) — Informe</div>
+    <div style="opacity:.85">Generado automáticamente — <span id="printDate"></span></div>
+  </header>
+
+  <header class="card no-print">
+    <h1>Caprini Score (Riesgo de TEV)</h1>
+    <p class="lead">Marca los factores aplicables. Se calcula todo al vuelo, con colores por categoría, validación, PDF y recomendaciones automáticas.</p>
+    <div class="row" style="margin-top:.35rem">
+      <label class="pill">Sexo:
+        <select id="sexo" style="border:none;background:transparent;outline:none;font-weight:700;margin-left:.35rem">
+          <option value="NA" selected>No especificado</option>
+          <option value="M">Hombre</option>
+          <option value="F">Mujer</option>
+        </select>
+      </label>
+      <button class="btn" id="btnClear">Limpiar selección</button>
+      <button class="btn primary" id="btnPDF">Generar PDF</button>
+      <button class="btn danger" id="btnJSON">Exportar selección (JSON)</button>
+      <span class="pill"><span class="kbd">?</span> Consejos: edad y tipo de cirugía son <strong>exclusivos</strong> · los demás ítems <strong>acumulan</strong>.</span>
+    </div>
+    <div class="score" aria-live="polite">
+      <div>
+        <div><strong>Puntuación total:</strong> <span class="val" id="scoreVal">0</span></div>
+        <div class="muted">Interpretación: <span id="riskLabel" class="risk low">Bajo (0–1)</span></div>
+        <div class="muted" id="catBreakdown" style="margin-top:.25rem"></div>
+      </div>
+      <div class="muted">
+        Umbrales: <strong>0–1</strong> Bajo · <strong>2</strong> Moderado · <strong>3–4</strong> Alto · <strong>≥5</strong> Muy alto
+      </div>
+    </div>
+    <div id="validator" class="alert"></div>
+  </header>
+
+  <!-- ===== Edad ===== -->
+  <section class="card section">
+    <h2><span class="tab c1"><span class="dot"></span>Edad (exclusiva)</span></h2>
+    <div class="radio-grid" role="radiogroup" aria-label="Edad">
+      <label class="radio"><input type="radio" name="edad" value="0" checked> &lt; 41 años</label>
+      <label class="radio"><input type="radio" name="edad" value="1"> 41–60 años <span class="pts">+1</span></label>
+      <label class="radio"><input type="radio" name="edad" value="2"> 61–74 años <span class="pts">+2</span></label>
+      <label class="radio"><input type="radio" name="edad" value="3"> ≥75 años <span class="pts">+3</span></label>
+    </div>
+  </section>
+
+  <!-- ===== 1 punto ===== -->
+  <section class="card section">
+    <h2>
+      <span class="tab c1"><span class="dot"></span>Factores — 1 punto</span>
+      <span class="count c1" id="count1">0 seleccionados</span>
+      <span class="tab cupd"><span class="dot"></span>Incluye adiciones 2013</span>
+    </h2>
+    <div class="list" id="grp1">
+      <!-- Base 2005 -->
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox" id="edema"></span><div>Piernas hinchadas (edema MMII actual)</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox" id="varices"></span><div>Várices</div><span class="pts">+1</span></label>
+      <label class="item" id="obesityBox"><span class="cb"><input id="imc25" data-points="1" data-cat="1" type="checkbox"></span><div>Obesidad (IMC &gt; 25) <small>si IMC ≥ 40 sumar +1 adicional (2013)</small></div><span class="pts">+1</span></label>
+      <label class="item" id="minorSurgBox"><span class="cb"><input id="minorSurg" data-points="1" data-cat="1" type="checkbox"></span><div>Cirugía menor programada <small>se desactiva si eliges cirugía mayor/laparoscópica/artroscópica</small></div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Paciente médico en reposo en cama (actual)</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Infarto agudo de miocardio (reciente)</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Insuficiencia cardiaca congestiva &lt; 1 mes</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Enfermedad inflamatoria intestinal</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Cirugía mayor previa &lt; 1 mes</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Sepsis &lt; 1 mes</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Función pulmonar anormal (EPOC)</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" type="checkbox"></span><div>Enfermedad pulmonar grave incl. neumonía &lt; 1 mes</div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" data-female="true" type="checkbox" id="hormonas"></span><div>Anticonceptivos orales / THS <small>(mujeres)</small></div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" data-female="true" type="checkbox" id="embarazo"></span><div>Embarazo o puerperio &lt; 1 mes <small>(mujeres)</small></div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="1" data-female="true" type="checkbox" id="obstetricos"></span><div>Pérdidas gestacionales / preeclampsia / RCIU <small>(mujeres)</small></div><span class="pts">+1</span></label>
+      <!-- Adiciones 2013 -->
+      <label class="item"><span class="cb"><input data-points="1" data-cat="upd" type="checkbox"></span><div>Tabaquismo (actual) <small>2013</small></div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="upd" type="checkbox"></span><div>Diabetes que requiere insulina <small>2013</small></div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="upd" type="checkbox"></span><div>Quimioterapia reciente/en curso <small>2013</small></div><span class="pts">+1</span></label>
+      <label class="item"><span class="cb"><input data-points="1" data-cat="upd" type="checkbox"></span><div>Transfusión sanguínea reciente <small>2013</small></div><span class="pts">+1</span></label>
+    </div>
+  </section>
+
+  <!-- ===== Cirugía / inmovilización ===== -->
+  <section class="card section">
+    <h2>
+      <span class="tab c2"><span class="dot"></span>Procedimientos e inmovilización</span>
+      <span class="count c2" id="count2">0 seleccionados</span>
+      <span class="tab cupd"><span class="dot"></span>Incluye extra cirugía &gt;2 h (2013)</span>
+    </h2>
+    <div class="radio-grid" role="radiogroup" aria-label="Tipo de cirugía (exclusivo)">
+      <label class="radio"><input type="radio" name="surgType" value="0" checked> Sin cirugía mayor / no aplica</label>
+      <label class="radio"><input type="radio" name="surgType" value="2" id="maj45"> Cirugía mayor &gt; 45 min <span class="pts">+2</span></label>
+      <label class="radio"><input type="radio" name="surgType" value="2" id="lap45"> Cirugía laparoscópica &gt; 45 min <span class="pts">+2</span></label>
+      <label class="radio"><input type="radio" name="surgType" value="2" id="arthro"> Cirugía artroscópica <span class="pts">+2</span></label>
+    </div>
+    <div class="list" style="margin-top:8px" id="grp2">
+      <label class="item">
+        <span class="cb"><input id="surg2h" type="checkbox" data-bonus="surg2h" data-cat="upd"></span>
+        <div><strong>+1 adicional si la cirugía dura &gt; 2 horas</strong> <small>2013</small></div>
+        <span class="pts">+1</span>
+      </label>
+      <label class="item"><span class="cb"><input data-points="2" data-cat="2" type="checkbox"></span><div>Confinamiento en cama &gt; 72 h (encamado ≥3 días)</div><span class="pts">+2</span></label>
+      <label class="item"><span class="cb"><input data-points="2" data-cat="2" type="checkbox"></span><div>Yeso/escayola inmovilizadora en MMII &lt; 1 mes</div><span class="pts">+2</span></label>
+      <label class="item"><span class="cb"><input data-points="2" data-cat="2" type="checkbox"></span><div>Acceso venoso central / PICC</div><span class="pts">+2</span></label>
+      <label class="item"><span class="cb"><input data-points="2" data-cat="2" type="checkbox"></span><div>Neoplasia maligna (presente o previa)</div><span class="pts">+2</span></label>
+    </div>
+  </section>
+
+  <!-- ===== 3 puntos ===== -->
+  <section class="card section">
+    <h2><span class="tab c3"><span class="dot"></span>Factores — 3 puntos</span> <span class="count c3" id="count3">0 seleccionados</span></h2>
+    <div class="list" id="grp3">
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Antecedente personal de TVP/EP</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Antecedente familiar de trombosis (1º grado)</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Trombofilia: Factor V Leiden</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Trombofilia: Mutación protrombina G20210A</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Anticoagulante lúpico / anticuerpos antifosfolípido</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Hiperhomocisteinemia</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Trombocitopenia inducida por heparina (HIT)</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Anticuerpos anticardiolipina elevados</div><span class="pts">+3</span></label>
+      <label class="item"><span class="cb"><input data-points="3" data-cat="3" type="checkbox"></span><div>Otras trombofilias congénitas/adquiridas (especificar)</div><span class="pts">+3</span></label>
+    </div>
+  </section>
+
+  <!-- ===== 5 puntos ===== -->
+  <section class="card section">
+    <h2><span class="tab c5"><span class="dot"></span>Factores — 5 puntos</span> <span class="count c5" id="count5">0 seleccionados</span></h2>
+    <div class="list" id="grp5">
+      <label class="item"><span class="cb"><input data-points="5" data-cat="5" type="checkbox"></span><div>Accidente cerebrovascular (ACV) &lt; 1 mes</div><span class="pts">+5</span></label>
+      <label class="item"><span class="cb"><input data-points="5" data-cat="5" type="checkbox"></span><div>Politraumatismo &lt; 1 mes</div><span class="pts">+5</span></label>
+      <label class="item"><span class="cb"><input data-points="5" data-cat="5" type="checkbox"></span><div>Artroplastia mayor electiva de EEII</div><span class="pts">+5</span></label>
+      <label class="item"><span class="cb"><input data-points="5" data-cat="5" type="checkbox"></span><div>Fractura de cadera, pelvis o pierna &lt; 1 mes</div><span class="pts">+5</span></label>
+      <label class="item"><span class="cb"><input data-points="5" data-cat="5" type="checkbox"></span><div>Lesión medular aguda con parálisis &lt; 1 mes</div><span class="pts">+5</span></label>
+    </div>
+  </section>
+
+  <!-- ===== Ajustes 2013 ===== -->
+  <section class="card section">
+    <h2><span class="tab cupd"><span class="dot"></span>Ajustes automáticos (2013)</span> <span class="count cupd" id="countUpd">0 seleccionados</span></h2>
+    <div class="list" id="grpUpd">
+      <label class="item">
+        <span class="cb"><input id="imc40" type="checkbox" data-bonus="imc40" data-cat="upd"></span>
+        <div><strong>+1 adicional si IMC ≥ 40</strong> <small>requiere “IMC &gt; 25”</small></div>
+        <span class="pts">+1</span>
+      </label>
+    </div>
+    <p class="muted" style="margin-top:8px">Los ajustes 2013 añaden puntos sobre los ítems base.</p>
+  </section>
+
+  <!-- ===== Recomendaciones automáticas ===== -->
+  <section class="card section" id="recSection">
+    <h2><span class="tab"><span class="dot" style="background:var(--blue-600)"></span>Cuadro de recomendaciones</span></h2>
+    <div id="recBox" class="note">
+      <p style="margin:.25rem 0 .5rem"><strong>Riesgo bajo (0–1):</strong> Deambulación temprana y frecuente, hidratación adecuada, educación sobre signos de TEV.</p>
+      <ul style="margin:0; padding-left:1.1rem">
+        <li>Evitar inmovilización prolongada.</li>
+        <li>Reevaluar si cambian los factores (p. ej., cirugía, inmovilización).</li>
+      </ul>
+      <p class="muted" style="margin:.6rem 0 0">⚠️ Orientativo. Individualizar según guía local y criterio clínico.</p>
+    </div>
+  </section>
+
+  <!-- ===== Interpretación / Abreviaturas ===== -->
+  <section class="card section grid">
+    <div>
+      <h2>Interpretación</h2>
+      <ul class="muted" style="margin-top:.25rem">
+        <li><strong>0–1</strong> = Riesgo bajo</li>
+        <li><strong>2</strong> = Riesgo moderado</li>
+        <li><strong>3–4</strong> = Riesgo alto</li>
+        <li><strong>≥5</strong> = Riesgo muy alto</li>
+      </ul>
+      <p class="muted">En artroplastia, frecuentemente se usa umbral <strong>≥10</strong> como alto/muy alto.</p>
+    </div>
+    <div>
+      <h2>Abreviaturas</h2>
+      <ul class="muted">
+        <li><strong>TEV</strong>: tromboembolismo venoso</li>
+        <li><strong>TVP</strong>: trombosis venosa profunda</li>
+        <li><strong>EP</strong>: embolia pulmonar</li>
+        <li><strong>IMC</strong>: índice de masa corporal</li>
+        <li><strong>EPOC</strong>: enfermedad pulmonar obstructiva crónica</li>
+        <li><strong>MMII</strong>: miembros inferiores</li>
+        <li><strong>HIT</strong>: trombocitopenia inducida por heparina</li>
+        <li><strong>PICC</strong>: catéter venoso central periférico</li>
+        <li><strong>RCIU</strong>: restricción del crecimiento intrauterino</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card section">
+    <h2>Referencias (APA 7)</h2>
+    <ol class="muted" style="padding-left:1.1rem; margin-top:.25rem">
+      <li>Cronin, M., Dengler, N., Krauss, E. S., Segal, A., Wei, N., Daly, M., Mota, F., &amp; Caprini, J. A. (2019). <em>Completion of the Updated Caprini Risk Assessment Model (2013 Version)</em>. <em>Clinical and Applied Thrombosis/Hemostasis, 25</em>, 1076029619838052. https://doi.org/10.1177/1076029619838052</li>
+      <li>Caprini, J. A. (2005). Thrombosis risk assessment as a guide to quality patient care. <em>Disease-a-Month, 51</em>(2–3), 70–78. https://doi.org/10.1016/j.disamonth.2005.02.003</li>
+      <li>Pannucci, C. J., Swistun, L., MacDonald, J. K., Henke, P. K., &amp; Brooke, B. S. (2017). Individualized VTE Risk Stratification Using the 2005 Caprini Score: A Meta-analysis. <em>Annals of Surgery, 265</em>(6), 1094–1103. https://doi.org/10.1097/SLA.0000000000002126</li>
+    </ol>
+  </section>
+
+  <footer class="print-foot">
+    <div>Caprini (2005) + Actualización 2013 — Uso informativo</div>
+    <div>Pág. <span class="print-pg"></span></div>
+  </footer>
+</main>
+
+<script>
+  // ========= Helpers =========
+  const $ = (s,ctx=document)=>ctx.querySelector(s);
+  const $$ = (s,ctx=document)=>Array.from(ctx.querySelectorAll(s));
+
+  const scoreVal = $('#scoreVal');
+  const riskLabel = $('#riskLabel');
+  const validator = $('#validator');
+  const sexSel = $('#sexo');
+
+  const minorSurg = $('#minorSurg');
+  const minorSurgBox = $('#minorSurgBox');
+  const imc25 = $('#imc25');
+  const imc40 = $('#imc40');
+  const surg2h = $('#surg2h');
+
+  const counts = {
+    '1': $('#count1'),
+    '2': $('#count2'),
+    '3': $('#count3'),
+    '5': $('#count5'),
+    'upd': $('#countUpd'),
+  };
+
+  function fmtCount(n){
+    return n===1 ? '1 seleccionado' : `${n} seleccionados`;
+  }
+
+  function getRiskTier(total){
+    if(total <= 1) return {key:'low', label:'Bajo (0–1)'};
+    if(total === 2) return {key:'mod', label:'Moderado (2)'};
+    if(total <= 4) return {key:'high', label:'Alto (3–4)'};
+    return {key:'vhigh', label:'Muy alto (≥5)'};
+  }
+
+  function setRisk(total){
+    riskLabel.classList.remove('low','mod','high','vhigh');
+    const tier = getRiskTier(total);
+    riskLabel.textContent = tier.label;
+    riskLabel.classList.add(tier.key);
+  }
+
+  function toggleMinorSurgery(){
+    const hasMajor = $('input[name="surgType"]:checked')?.value !== '0';
+    if(hasMajor){ minorSurg.checked=false; minorSurgBox.setAttribute('aria-disabled','true'); }
+    else { minorSurgBox.removeAttribute('aria-disabled'); }
+  }
+  function toggleImc40(){
+    const box = $('#imc40').closest('.item');
+    if(!imc25.checked){ imc40.checked=false; box.setAttribute('aria-disabled','true'); }
+    else { box.removeAttribute('aria-disabled'); }
+  }
+  function toggleSurg2h(){
+    const ok = $('input[name="surgType"]:checked')?.value === '2';
+    const box = $('#surg2h').closest('.item');
+    if(!ok){ surg2h.checked=false; box.setAttribute('aria-disabled','true'); }
+    else { box.removeAttribute('aria-disabled'); }
+  }
+
+  function computeCounters(){
+    const map = { '1':0,'2':0,'3':0,'5':0,'upd':0 };
+    $$('input[type="checkbox"]').forEach(cb=>{
+      if(cb.checked){
+        const cat = cb.dataset.cat;
+        if(cat && map.hasOwnProperty(cat)) map[cat]++;
+      }
+    });
+    Object.entries(map).forEach(([k,v])=>{
+      if(counts[k]) counts[k].textContent = fmtCount(v);
+    });
+    // Breakdown resumen
+    $('#catBreakdown').textContent =
+      `1p: ${map['1']} · 2p: ${map['2']} · 3p: ${map['3']} · 5p: ${map['5']} · 2013: ${map['upd']}`;
+  }
+
+  function validateForm(){
+    const msgs = [];
+    const sex = sexSel.value;
+
+    // Reglas de sexo para ítems femeninos
+    const femaleItems = $$('input[type="checkbox"][data-female="true"]');
+    const femaleChecked = femaleItems.some(cb=>cb.checked);
+    if(femaleChecked && sex==='M'){
+      msgs.push('Has marcado ítems exclusivos de mujeres pero el sexo es "Hombre". Corrige el sexo o desmarca los ítems.');
+    }
+
+    // Regla cirugía >2 h sin cirugía de 2 puntos
+    if(surg2h.checked && $('input[name="surgType"]:checked')?.value !== '2'){
+      msgs.push('El extra “cirugía > 2 h” requiere seleccionar un tipo de cirugía de +2 puntos.');
+    }
+
+    // Regla IMC ≥ 40 sin IMC > 25
+    if(imc40.checked && !imc25.checked){
+      msgs.push('El extra “IMC ≥ 40” requiere marcar “Obesidad (IMC > 25)”.');
+    }
+
+    // Mensajería
+    if(msgs.length){
+      validator.innerHTML = '<strong>Revisa:</strong><ul style="margin:.35rem 0 0; padding-left:1.1rem">' +
+        msgs.map(m=>`<li>${m}</li>`).join('') + '</ul>';
+      validator.classList.add('show');
+    }else{
+      validator.classList.remove('show');
+      validator.innerHTML = '';
+    }
+  }
+
+  // Recomendaciones automáticas por riesgo
+  function setRecommendations(total){
+    const {key} = getRiskTier(total);
+    const rec = {
+      low: {
+        title: 'Riesgo bajo (0–1)',
+        items: [
+          'Deambulación temprana y frecuente.',
+          'Hidratación adecuada; evitar inmovilización prolongada.',
+          'Educación sobre signos/síntomas de TVP/EP.',
+        ]
+      },
+      mod: {
+        title: 'Riesgo moderado (2)',
+        items: [
+          'Profilaxis mecánica: medias elásticas o compresión neumática intermitente (CNI) si procede.',
+          'Movilización precoz; valorar farmacoprofilaxis según procedimiento y sangrado.',
+          'Reevaluación diaria de riesgo y sangrado.',
+        ]
+      },
+      high: {
+        title: 'Riesgo alto (3–4)',
+        items: [
+          'Profilaxis combinada: mecánica (CNI/medias) + farmacológica (HBPM/alternativa) si no hay contraindicaciones.',
+          'Inicio temprano postoperatorio cuando sea seguro.',
+          'Extender profilaxis según tipo de cirugía/procedimiento y guías locales.',
+        ]
+      },
+      vhigh: {
+        title: 'Riesgo muy alto (≥5)',
+        items: [
+          'Profilaxis intensiva: farmacológica + mecánica y considerar prolongación (p. ej., 4–6 semanas en determinados escenarios quirúrgicos).',
+          'Plan individualizado en coordinación con equipo médico.',
+          'Vigilancia estrecha de sangrado/riesgo trombótico y ajuste dinámico.',
+        ]
+      }
+    }[key];
+
+    const box = $('#recBox');
+    box.innerHTML = `
+      <p style="margin:.25rem 0 .5rem"><strong>${rec.title}:</strong></p>
+      <ul style="margin:0; padding-left:1.1rem">
+        ${rec.items.map(it=>`<li>${it}</li>`).join('')}
+      </ul>
+      <p class="muted" style="margin:.6rem 0 0">⚠️ Recomendaciones orientativas. Individualizar según guía local y criterio clínico; este material es informativo.</p>
+    `;
+  }
+
+  function computeScore(){
+    let total = 0;
+
+    // Edad
+    total += Number(($('input[name="edad"]:checked')?.value)||0);
+
+    // Cirugía (exclusivo)
+    const surgType = Number(($('input[name="surgType"]:checked')?.value)||0);
+    total += surgType;
+
+    // Ítems base
+    $$('input[type="checkbox"][data-points]').forEach(cb=>{
+      if(cb.checked) total += Number(cb.dataset.points);
+    });
+
+    // Extras 2013 condicionados
+    if(surg2h.checked && surgType === 2) total += 1;
+    if(imc40.checked && imc25.checked) total += 1;
+
+    // UI
+    scoreVal.textContent = String(total);
+    setRisk(total);
+    setRecommendations(total);
+
+    // Toggles y validación
+    toggleMinorSurgery(); toggleImc40(); toggleSurg2h();
+    computeCounters(); validateForm();
+  }
+
+  // Export JSON
+  function exportJSON(){
+    const data = {
+      fecha: new Date().toISOString(),
+      sexo: sexSel.value,
+      edad: $('input[name="edad"]:checked')?.nextSibling?.textContent?.trim(),
+      cirugia: $('input[name="surgType"]:checked')?.nextSibling?.textContent?.trim(),
+      seleccion: $$('input[type="checkbox"]').filter(cb=>cb.checked).map(cb=>{
+        const label = cb.closest('label').innerText.trim();
+        return { id: cb.id || null, texto: label };
+      }),
+      puntuacion: Number(scoreVal.textContent)
+    };
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `caprini_${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+  }
+
+  // PDF (print) — maquetado pro
+  function genPDF(){
+    $('#printDate').textContent = new Date().toLocaleString();
+    window.print();
+  }
+
+  // Events
+  $$( 'input, select' ).forEach(el=>el.addEventListener('change', computeScore));
+  $('#btnClear').addEventListener('click', ()=>{
+    $('input[name="edad"][value="0"]').checked = true;
+    $('input[name="surgType"][value="0"]').checked = true;
+    $$('input[type="checkbox"]').forEach(cb=> cb.checked = false);
+    sexSel.value = 'NA';
+    computeScore();
+  });
+  $('#btnPDF').addEventListener('click', genPDF);
+  $('#btnJSON').addEventListener('click', exportJSON);
+
+  // Init
+  computeScore();
+</script>
+</body>
+</html>

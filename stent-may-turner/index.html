@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stents Venosos para Síndrome de May-Thurner - Análisis y Comparativa</title>
+  <style>
+    /* Fuentes */
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Roboto&display=swap');
+
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #0a0a14;
+      color: #e0e7ff;
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    h1, h2 {
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      color: #3ab7ff; /* azul eléctrico */
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.4rem;
+      margin-top: 1.5rem;
+      text-transform: none;
+      user-select: none;
+    }
+
+    h2 {
+      border-bottom: 2px solid #3ab7ff;
+      padding-bottom: 0.3rem;
+      margin: 2rem 0 1rem 0;
+    }
+
+    /* Contenedor general y visibilidad pages */
+    .container {
+      max-width: 1000px;
+      background: #121224;
+      margin: 1.5rem auto 3rem;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #3ab7ff88;
+      min-height: 70vh;
+      position: relative;
+      user-select: text;
+    }
+
+    /* Navegación entre páginas */
+    .nav-buttons {
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 0;
+    }
+
+    .nav-buttons button {
+      background: transparent;
+      border: 2px solid #3ab7ff;
+      color: #3ab7ff;
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      padding: 0.5rem 1.5rem;
+      margin: 0 0.8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+      user-select: none;
+    }
+
+    .nav-buttons button:hover, .nav-buttons button.active {
+      background-color: #3ab7ff;
+      color: #0a0a14;
+      box-shadow: 0 0 15px #3ab7ff;
+    }
+
+    /* Tabla base futurista primera página */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 12px;
+      font-size: 0.95rem;
+      color: #c9d1ffdd;
+      user-select: text;
+    }
+
+    thead tr {
+      background-color: #274760cc;
+      color: #b3d7ff;
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    thead th {
+      padding: 12px 15px;
+      text-align: left;
+      border-radius: 12px 12px 0 0;
+    }
+
+    tbody tr {
+      background-color: #22303d88;
+      border-radius: 12px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: default;
+    }
+    tbody tr:hover {
+      background-color: #395870bb;
+      box-shadow: 0 0 15px #3ab7ff88;
+    }
+
+    tbody td {
+      padding: 18px 15px;
+      vertical-align: top;
+      border-left: 5px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    tbody tr:hover td {
+      border-left: 5px solid #3ab7ff;
+    }
+
+    /* Enlaces */
+    a {
+      color: #3ab7ffcc;
+      text-decoration: none;
+      border-bottom: 1px dotted #3ab7ffcc;
+      transition: color 0.25s ease;
+    }
+    a:hover {
+      color: #60c9ff;
+      border-bottom: 1px solid #60c9ff;
+    }
+
+    /* Notas al pie */
+    .footnote {
+      font-size: 0.85rem;
+      color: #a0b9ffaa;
+      margin-top: 1.2rem;
+      font-style: italic;
+      border-top: 1px solid #3ab7ff44;
+      padding-top: 8px;
+      user-select: text;
+    }
+
+    sup {
+      font-size: 0.7rem;
+      color: #3ab7ffcc;
+      cursor: help;
+    }
+
+    /* Bibliografía */
+    .bibliography {
+      margin-top: 2.5rem;
+      font-size: 0.9rem;
+      color: #9abfffcc;
+      font-family: 'Roboto', sans-serif;
+      border-top: 1.5px solid #3ab7ff55;
+      padding-top: 1rem;
+      user-select: text;
+    }
+    .bibliography h2 {
+      color: #3ab7ffcc;
+      margin-top: 0;
+    }
+    .bibliography ol {
+      padding-left: 1.3rem;
+    }
+    .bibliography li {
+      margin-bottom: 0.8rem;
+      line-height: 1.4;
+    }
+
+    /* ------- Segunda página: pestañas ------ */
+
+    .tabs {
+      margin-top: 1.5rem;
+      border-bottom: 2px solid #3ab7ffaa;
+      display: flex;
+      gap: 0.3rem;
+      user-select: none;
+    }
+
+    .tab-button {
+      background: #121224cc;
+      border: none;
+      border-top-left-radius: 6px;
+      border-top-right-radius: 6px;
+      color: #6eaeffaa;
+      padding: 0.6rem 1.2rem;
+      cursor: pointer;
+      font-family: 'Merriweather', serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .tab-button.active,
+    .tab-button:hover {
+      background: #3ab7ffdd;
+      color: #0a0a14;
+      box-shadow: 0 5px 10px #3ab7ffbb;
+      font-weight: 700;
+    }
+
+    .tab-content {
+      background: #192a46ee;
+      padding: 1rem 1.2rem;
+      border-radius: 0 12px 12px 12px;
+      box-shadow: inset 0 0 15px #3ab7ff33;
+      margin-top: -2px;
+      color: #c9dbffcc;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+    .tab-content table {
+      border-spacing: 0 10px;
+      font-size: 0.9rem;
+    }
+    .tab-content thead tr {
+      background-color: #125aafdd;
+    }
+    .tab-content thead th {
+      border-radius: 8px 8px 0 0;
+      padding: 10px 8px;
+    }
+    .tab-content tbody tr {
+      background-color: #22497aff;
+      color: #e0e7ffcc;
+      box-shadow: inset 0 0 10px #3ab7ff88;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+      cursor: default;
+    }
+    .tab-content tbody tr:hover {
+      background-color: #3ab7ffcc;
+      color: #0a0a14;
+      font-weight: 600;
+      box-shadow: 0 0 10px #3ab7ffcc;
+    }
+    .tab-content td, .tab-content th {
+      padding: 10px 12px;
+      vertical-align: middle;
+      border-left: 3px solid transparent;
+    }
+    .tab-content tbody tr:hover td {
+      border-left: 3px solid #0a95ff;
+    }
+
+    /* Scroll bar personalizado para pestañas */
+    .tab-content::-webkit-scrollbar {
+      width: 7px;
+    }
+    .tab-content::-webkit-scrollbar-track {
+      background: #0a0a14;
+    }
+    .tab-content::-webkit-scrollbar-thumb {
+      background-color: #3ab7ffcc;
+      border-radius: 10px;
+    }
+
+    /* Enlaces para casas comerciales */
+    .link-button {
+      color: #60c9ff;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .link-button:hover {
+      color: #a7e1ff;
+    }
+
+    /* Responsive para tablas y textos pequeños */
+    @media (max-width: 680px) {
+      .container {
+        padding: 1.2rem 1.6rem;
+      }
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      tbody tr {
+        margin-bottom: 1.2rem;
+        border-radius: 12px;
+        background: #22303dbb;
+        padding: 0.8rem;
+      }
+      tbody td {
+        border-left: none !important;
+        padding: 6px 8px;
+        text-align: right;
+        position: relative;
+      }
+      tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #3ab7ffcc;
+        font-size: 0.8rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="nav-buttons" role="navigation" aria-label="Navegación principal entre páginas">
+    <button id="btnPage1" class="active" aria-controls="page1" aria-selected="true" tabindex="0">Análisis Profundo</button>
+    <button id="btnPage2" aria-controls="page2" aria-selected="false" tabindex="-1">Comparativa Stents</button>
+  </div>
+
+  <!-- Página 1: Análisis Profundo -->
+  <main id="page1" class="container" tabindex="0">
+    <h1>Stents Venosos para el Síndrome de May-Thurner (SMT): Análisis Profundo y Evidencia Científica</h1>
+
+    <p>
+      El síndrome de <strong>May-Thurner (SMT)</strong> es una patología venosa caracterizada por la compresión de la vena ilíaca común izquierda, predisponiendo a trombosis venosa profunda (TVP) y complicaciones asociadas. Este análisis exhaustivo aborda el uso de <em>stents venosos</em> como tratamiento endovascular, basado en meta-análisis y estudios recientes (hasta 2025). Dirigido a investigadores, científicos y médicos especializados.
+    </p>
+
+    <h2>Cuadro Detallado: Características y Evidencia del Uso de Stents Venosos en SMT</h2>
+
+    <table aria-label="Características y evidencia del uso de stents venosos en el síndrome de May-Thurner">
+      <thead>
+        <tr>
+          <th>Características</th>
+          <th>Descripción Detallada</th>
+          <th>Citas / Referencias</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Características"><strong>Definición de SMT</strong></td>
+          <td data-label="Descripción">Compresión anatómica de la vena ilíaca común izquierda por la arteria ilíaca común derecha y la columna vertebral, causando obstrucción venosa y riesgo de trombosis venosa profunda (TVP) en extremidad inferior izquierda.</td>
+          <td data-label="Referencias"><a href="http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S1137-66272019000100010" target="_blank" rel="noopener">[2]</a>, <a href="http://adm.meducatium.com.ar/contenido/articulos/22900830085_1737/pdf/22900830085.pdf" target="_blank" rel="noopener">[6]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Indicaciones para stent</strong></td>
+          <td data-label="Descripción">Stent autoexpandible en obstrucción venosa significativa y/o TVP tras diagnóstico con imagen avanzada. Indicados en pacientes sintomáticos con dolor, edema o riesgo trombótico elevado.</td>
+          <td data-label="Referencias"><a href="https://seacv.es/wp-content/uploads/2024/06/20240516_-INFORME-uso-Stent-TVP-MI.pdf" target="_blank" rel="noopener">[1]</a>, <a href="http://adm.meducatium.com.ar/contenido/articulos/22900830085_1737/pdf/22900830085.pdf" target="_blank" rel="noopener">[6]</a>, <a href="https://www.cvmus.com/es/vascular-conditions/may-thurner-syndrome" target="_blank" rel="noopener">[9]</a>, <a href="https://www.revclinesp.es/es-congresos-40-congreso-sociedad-espanola-medicina-108-sesion-enfermedad-tromboembolica-t--5889-sindrome-de-may-thurner-serie-de-70803" target="_blank" rel="noopener">[10]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Técnica endovascular</strong></td>
+          <td data-label="Descripción">Acceso venoso percutáneo femoral, recanalización y angioplastia con balón seguida de colocación del stent. Control imagenológico para evitar complicaciones como jailing de vena cava.</td>
+          <td data-label="Referencias"><a href="http://adm.meducatium.com.ar/contenido/articulos/22900830085_1737/pdf/22900830085.pdf" target="_blank" rel="noopener">[6]</a>, <a href="http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0003-31702021000100041" target="_blank" rel="noopener">[8]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Tipos de stents utilizados</strong></td>
+          <td data-label="Descripción">Stents venosos autoexpandibles diseñados para soportar compresión y evitar fracturas/migración. Ejemplo: Zilver Vena (16×60 mm).</td>
+          <td data-label="Referencias"><a href="https://seacv.es/wp-content/uploads/2024/06/20240516_-INFORME-uso-Stent-TVP-MI.pdf" target="_blank" rel="noopener">[1]</a>, <a href="https://medicinaysaludpublica.com/noticias/casos-clinicos/paciente-con-antecedente-de-may-thurner-es-intervenida-por-obstruccion-de-la-vena-iliaca-con-stent/23917" target="_blank" rel="noopener">[7]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Eficacia y permeabilidad primaria</strong></td>
+          <td data-label="Descripción">Permeabilidad primaria media aproximada del 92% en meta-análisis con >5000 pacientes. Permeabilidad secundaria entre 66% y 96%. Mejoría significativa clínica y calidad de vida (VCSS, SF-36).</td>
+          <td data-label="Referencias"><a href="https://seacv.es/wp-content/uploads/2024/06/20240516_-INFORME-uso-Stent-TVP-MI.pdf" target="_blank" rel="noopener">[1]</a>, <a href="https://www.revclinesp.es/es-congresos-40-congreso-sociedad-espanola-medicina-108-sesion-enfermedad-tromboembolica-t--5889-sindrome-de-may-thurner-serie-de-70803" target="_blank" rel="noopener">[10]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Mejoras clínicas</strong></td>
+          <td data-label="Descripción">Disminución de dolor, edema y úlceras postrombóticas (56-100%). Reducción en recurrencias y síndrome postrombótico a largo plazo.</td>
+          <td data-label="Referencias"><a href="https://seacv.es/wp-content/uploads/2024/06/20240516_-INFORME-uso-Stent-TVP-MI.pdf" target="_blank" rel="noopener">[1]</a>, <a href="https://www.revclinesp.es/es-congresos-40-congreso-sociedad-espanola-medicina-108-sesion-enfermedad-tromboembolica-t--5889-sindrome-de-may-thurner-serie-de-70803" target="_blank" rel="noopener">[10]</a>, <a href="http://www.scielo.org.mx/scielo.php?script=sci_arttext&pid=S2696-130X2024000100035" target="_blank" rel="noopener">[3]</a>, <a href="https://repositoriocyt.unlam.edu.ar/bitstream/123456789/1929/1/ReDSal%203-1-4.pdf" target="_blank" rel="noopener">[5]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Complicaciones reportadas</strong></td>
+          <td data-label="Descripción">Bajo riesgo: fractura y migración rara del stent, trombosis recurrente. Requiere seguimiento y anticoagulación para prevenir recurrencia. Casos aislados de retiro quirúrgico.</td>
+          <td data-label="Referencias"><a href="https://seacv.es/wp-content/uploads/2024/06/20240516_-INFORME-uso-Stent-TVP-MI.pdf" target="_blank" rel="noopener">[1]</a>, <a href="https://medicinaysaludpublica.com/noticias/casos-clinicos/paciente-con-antecedente-de-may-thurner-es-intervenida-por-obstruccion-de-la-vena-iliaca-con-stent/23917" target="_blank" rel="noopener">[7]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Tratamiento complementario</strong></td>
+          <td data-label="Descripción">Anticoagulación y antiagregantes tras stent. En trombosis aguda fibrinólisis o trombectomía previa colocación. Anticoagulación sola es menos efectiva, con alta recurrencia y síndrome postrombótico.</td>
+          <td data-label="Referencias"><a href="https://www.revclinesp.es/es-congresos-40-congreso-sociedad-espanola-medicina-108-sesion-enfermedad-tromboembolica-t--5889-sindrome-de-may-thurner-serie-de-70803" target="_blank" rel="noopener">[10]</a>, <a href="https://cbseram.com/2021/11/16/terapias-de-anticoagulacion-tras-el-tratamiento-mediante-stent-de-patologia-venosa-no-trombotica-de-la-extremidad-inferior/" target="_blank" rel="noopener">[4]</a>, <a href="https://www.cvmus.com/es/vascular-conditions/may-thurner-syndrome" target="_blank" rel="noopener">[9]</a></td>
+        </tr>
+        <tr>
+          <td data-label="Características"><strong>Recomendaciones prácticas</strong></td>
+          <td data-label="Descripción">Evaluación con IVUS, angioTAC previa. Técnica endovascular con equipo multidisciplinar. Control imagenológico estricto para evitar protrusión en vena cava. Uso de stents venosos específicos y seguimiento para mantener permeabilidad.</td>
+          <td data-label="Referencias"><a href="http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0003-31702021000100041" target="_blank" rel="noopener">[8]</a>, <a href="http://adm.meducatium.com.ar/contenido/articulos/22900830085_1737/pdf/22900830085.pdf" target="_blank" rel="noopener">[6]</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="footnote">
+      <sup>1</sup> VCSS: Venous Clinical Severity Score, escala para evaluar gravedad clínica en patología venosa.<br />
+      <sup>2</sup> SF-36: Short Form 36, cuestionario de calidad de vida relacionado con salud.
+    </p>
+
+    <section class="bibliography" aria-label="Bibliografía">
+      <h2>Bibliografía</h2>
+      <ol>
+        <li><a href="https://seacv.es/wp-content/uploads/2024/06/20240516_-INFORME-uso-Stent-TVP-MI.pdf" target="_blank" rel="noopener">Sociedad Española de Angiología y Cirugía Vascular (2024). Informe sobre uso de stent en trombosis venosa profunda. SEACV.</a></li>
+        <li><a href="http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S1137-66272019000100010" target="_blank" rel="noopener">García-García M et al. (2019). Síndrome de May-Thurner, diagnóstico y tratamiento. Revista Española de Angiología y Cirugía Vascular.</a></li>
+        <li><a href="http://www.scielo.org.mx/scielo.php?script=sci_arttext&pid=S2696-130X2024000100035" target="_blank" rel="noopener">López Álvarez et al. (2024). Síndrome de May-Thurner: presentación de caso y revisión. Revista Mexicana de Angiología.</a></li>
+        <li><a href="https://cbseram.com/2021/11/16/terapias-de-anticoagulacion-tras-el-tratamiento-mediante-stent-de-patologia-venosa-no-trombotica-de-la-extremidad-inferior/" target="_blank" rel="noopener">Sánchez Ramírez P. (2021). Terapias de anticoagulación tras tratamiento mediante stent en patología venosa.</a></li>
+        <li><a href="https://repositoriocyt.unlam.edu.ar/bitstream/123456789/1929/1/ReDSal%203-1-4.pdf" target="_blank" rel="noopener">Martínez et al. (2024). Síndrome de May-Thurner en paciente con antecedentes. Repositorio Científico UNLaM.</a></li>
+        <li><a href="http://adm.meducatium.com.ar/contenido/articulos/22900830085_1737/pdf/22900830085.pdf" target="_blank" rel="noopener">Ramírez L, Pérez F. (2024). Tratamiento endovascular del síndrome de May-Thurner. Meducatium.</a></li>
+        <li><a href="https://medicinaysaludpublica.com/noticias/casos-clinicos/paciente-con-antecedente-de-may-thurner-es-intervenida-por-obstruccion-de-la-vena-iliaca-con-stent/23917" target="_blank" rel="noopener">Gómez M. (2024). Informe caso clínico de intervención con stent en May-Thurner. Medicina y Salud Pública.</a></li>
+        <li><a href="http://scielo.isciii.es/scielo.php?script=sci_arttext&pid=S0003-31702021000100041" target="_blank" rel="noopener">Fernández-Jiménez et al. (2021). Consejos en el tratamiento endovascular del síndrome de May-Thurner. Revista Española de Cardiología.</a></li>
+        <li><a href="https://www.cvmus.com/es/vascular-conditions/may-thurner-syndrome" target="_blank" rel="noopener">CVMUS. (2025). Tratamiento del Síndrome de May Thurner.</a></li>
+        <li><a href="https://www.revclinesp.es/es-congresos-40-congreso-sociedad-espanola-medicina-108-sesion-enfermedad-tromboembolica-t--5889-sindrome-de-may-thurner-serie-de-70803" target="_blank" rel="noopener">Congreso SEMES (2021). Síndrome de May-Thurner: serie y recomendaciones.</a></li>
+      </ol>
+    </section>
+  </main>
+
+  <!-- Página 2: Comparativa stents -->
+  <section id="page2" class="container" tabindex="0" style="display:none;">
+    <h1>Comparativa de Stents Evaluados para Síndrome de May-Thurner</h1>
+
+    <div class="tabs" role="tablist" aria-label="Secciones del cuadro comparativo">
+      <button class="tab-button active" role="tab" aria-selected="true" aria-controls="tab1" id="tabBtn1" tabindex="0">Características Técnicas</button>
+      <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab2" id="tabBtn2" tabindex="-1">Aspectos Clínicos y Precauciones</button>
+      <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab3" id="tabBtn3" tabindex="-1">Material, Coste y Proveedores</button>
+    </div>
+
+    <div id="tab1" class="tab-content" role="tabpanel" aria-labelledby="tabBtn1" tabindex="0">
+      <table aria-label="Características técnicas de distintos stents para May Thurner">
+        <thead>
+          <tr>
+            <th>Stent</th>
+            <th>Tipo de Stent</th>
+            <th>Tamaños (mm)</th>
+            <th>Introductor necesario (Fr)</th>
+            <th>Longitud catéter (cm)</th>
+            <th>Guía necesaria</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Stent">Zilver Vena</td>
+            <td data-label="Tipo">Desnudo, autoexpandible</td>
+            <td data-label="Tamaños">12-20 × 40-120</td>
+            <td data-label="Introductor">8-9</td>
+            <td data-label="Longitud catéter">80-110</td>
+            <td data-label="Guía necesaria">0,035"</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Venovo</td>
+            <td data-label="Tipo">Desnudo, autoexpandible</td>
+            <td data-label="Tamaños">14-18 × 40-150</td>
+            <td data-label="Introductor">8-9</td>
+            <td data-label="Longitud catéter">80-110</td>
+            <td data-label="Guía necesaria">0,035"</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Wallstent</td>
+            <td data-label="Tipo">Desnudo, autoexpandible</td>
+            <td data-label="Tamaños">10-24 × 40-120</td>
+            <td data-label="Introductor">7-9</td>
+            <td data-label="Longitud catéter">80-110</td>
+            <td data-label="Guía necesaria">0,035"</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Covered CP Stent</td>
+            <td data-label="Tipo">Recubierto (PTFE)</td>
+            <td data-label="Tamaños">18-24 × 45-60</td>
+            <td data-label="Introductor">12-14</td>
+            <td data-label="Longitud catéter">100-120</td>
+            <td data-label="Guía necesaria">0,035"</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">GORE Viabahn VBX</td>
+            <td data-label="Tipo">Stent Graft recubierto</td>
+            <td data-label="Tamaños">5-16 × 22-79</td>
+            <td data-label="Introductor">8-11</td>
+            <td data-label="Longitud catéter">80-110</td>
+            <td data-label="Guía necesaria">0,014" - 0,018"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tab2" class="tab-content" role="tabpanel" aria-labelledby="tabBtn2" tabindex="0" style="display:none;">
+      <table aria-label="Aspectos clínicos, precauciones, IFU y contraindicaciones de stents para May Thurner">
+        <thead>
+          <tr>
+            <th>Stent</th>
+            <th>Precauciones</th>
+            <th>IFU (Indicaciones)</th>
+            <th>Contraindicaciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Stent">Zilver Vena</td>
+            <td data-label="Precauciones">
+              Evitar jailing vena cava. Verificar la posición mediante imágenes.<br/>
+              Riesgo fractura en tortuosidad extrema.
+            </td>
+            <td data-label="IFU">Obstrucción venosa ilíaca, SMT sintomático, TVP crónica.</td>
+            <td data-label="Contraindicaciones">Infección activa, trombofilia no controlada, alergia a materiales.</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Venovo</td>
+            <td data-label="Precauciones">
+              Evitar sobre dilatación excesiva.<br />
+              Control seguimiento por posible trombosis.
+            </td>
+            <td data-label="IFU">Estenosis venosa crónica, SMT con trombosis venosa.</td>
+            <td data-label="Contraindicaciones">Trombosis aguda no tratada, infección local.</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Wallstent</td>
+            <td data-label="Precauciones">Chequeo de migración frecuente, evitar posición subóptima.</td>
+            <td data-label="IFU">Obstrucción venosa iliaca, trombosis crónica.</td>
+            <td data-label="Contraindicaciones">Infección sistémica activa, alergias a metales.</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Covered CP Stent</td>
+            <td data-label="Precauciones">Mayor tamaño de introductor, riesgo mayor sangrado, control estricto.</td>
+            <td data-label="IFU">Trombosis venosa con alto riesgo de embolia, SMT complejo.</td>
+            <td data-label="Contraindicaciones">Sangrado activo, reacción adversa al recubrimiento.</td>
+          </tr>
+          <tr>
+            <td data-label="Stent">GORE Viabahn VBX</td>
+            <td data-label="Precauciones">Precisión en el posicionamiento, necesidad de guías delgadas.</td>
+            <td data-label="IFU">Obstrucción o fuga venosa con compromiso estenosante, SMT avanzado.</td>
+            <td data-label="Contraindicaciones">Rechazo a polietileno, trombosis aguda no resuelta.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="tab3" class="tab-content" role="tabpanel" aria-labelledby="tabBtn3" tabindex="0" style="display:none;">
+      <table aria-label="Material, coste y casas comerciales de stents para May Thurner">
+        <thead>
+          <tr>
+            <th>Stent</th>
+            <th>Material</th>
+            <th>Coste Aproximado (€)</th>
+            <th>Casa Comercial</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Stent">Zilver Vena</td>
+            <td data-label="Material">Nitinol</td>
+            <td data-label="Coste">4500 - 6000</td>
+            <td data-label="Casa Comercial"><a class="link-button" href="https://www.bostonscientific.com/en-US/products/stents/zilver-vena.html" target="_blank" rel="noopener">Boston Scientific</a></td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Venovo</td>
+            <td data-label="Material">Nitinol, diseño venoso</td>
+            <td data-label="Coste">4200 - 5800</td>
+            <td data-label="Casa Comercial"><a class="link-button" href="https://www.bardpv.com/products/venovo-self-expanding-stent" target="_blank" rel="noopener">BD Bard</a></td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Wallstent</td>
+            <td data-label="Material">Acero inoxidable</td>
+            <td data-label="Coste">3500 - 5000</td>
+            <td data-label="Casa Comercial"><a class="link-button" href="https://www.bostonscientific.com/en-US/products/stents/wallstent-femoral.html" target="_blank" rel="noopener">Boston Scientific</a></td>
+          </tr>
+          <tr>
+            <td data-label="Stent">Covered CP Stent</td>
+            <td data-label="Material">Acero inoxidable + PTFE recubrimiento</td>
+            <td data-label="Coste">6000 - 8000</td>
+            <td data-label="Casa Comercial"><a class="link-button" href="https://www.ckcvascular.com/covered-cp-stent/" target="_blank" rel="noopener">Cook Medical</a></td>
+          </tr>
+          <tr>
+            <td data-label="Stent">GORE Viabahn VBX</td>
+            <td data-label="Material">Nitinol + ePTFE recubrimiento</td>
+            <td data-label="Coste">7200 - 9000</td>
+            <td data-label="Casa Comercial"><a class="link-button" href="https://www.goremedical.com/vascular/products/gore-viabahn-vbx-balloon-expandable-stent-graft" target="_blank" rel="noopener">W.L. Gore & Associates</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    // Cambio de páginas
+    const btnPage1 = document.getElementById('btnPage1');
+    const btnPage2 = document.getElementById('btnPage2');
+    const page1 = document.getElementById('page1');
+    const page2 = document.getElementById('page2');
+
+    btnPage1.addEventListener('click', () => {
+      btnPage1.classList.add('active');
+      btnPage1.setAttribute('aria-selected', 'true');
+      btnPage1.setAttribute('tabindex', '0');
+
+      btnPage2.classList.remove('active');
+      btnPage2.setAttribute('aria-selected', 'false');
+      btnPage2.setAttribute('tabindex', '-1');
+
+      page1.style.display = 'block';
+      page2.style.display = 'none';
+      page1.focus();
+    });
+
+    btnPage2.addEventListener('click', () => {
+      btnPage2.classList.add('active');
+      btnPage2.setAttribute('aria-selected', 'true');
+      btnPage2.setAttribute('tabindex', '0');
+
+      btnPage1.classList.remove('active');
+      btnPage1.setAttribute('aria-selected', 'false');
+      btnPage1.setAttribute('tabindex', '-1');
+
+      page1.style.display = 'none';
+      page2.style.display = 'block';
+      page2.focus();
+    });
+
+    // Sistema pestañas segunda página
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const selectedId = btn.getAttribute('aria-controls');
+
+        tabButtons.forEach(tb => {
+          tb.classList.remove('active');
+          tb.setAttribute('aria-selected', 'false');
+          tb.setAttribute('tabindex', '-1');
+        });
+
+        tabContents.forEach(tc => {
+          if(tc.id === selectedId) {
+            tc.style.display = 'block';
+          } else {
+            tc.style.display = 'none';
+          }
+        });
+
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+        btn.setAttribute('tabindex', '0');
+        btn.focus();
+      });
+    });
+  </script>
+</body>
+</html>

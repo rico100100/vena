@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Villalta Severity Score</title>
+<meta name="color-scheme" content="light dark">
+<style>
+/* ========= Blue Pro Theme ========= */
+:root{
+  --blue-50:#f0f6ff; --blue-100:#e2eeff; --blue-200:#cfe3ff; --blue-300:#b3d3ff;
+  --blue-400:#80b6ff; --blue-500:#4d9aff; --blue-600:#1e7df5; --blue-700:#0f64d6;
+  --blue-800:#0b4ea8; --blue-900:#0a3e84;
+
+  --bg: linear-gradient(135deg, var(--blue-50) 0%, #ffffff 40%, #f7fbff 100%);
+  --fg: #0b1220;
+  --muted: color-mix(in oklab, var(--fg) 55%, #ffffff 45%);
+  --card: rgba(255,255,255,.85);
+  --border: color-mix(in oklab, var(--blue-900) 10%, #ffffff 90%);
+
+  --ok:#16a34a; --warn:#f59e0b; --danger:#ef4444; --info: var(--blue-700);
+  --ptS:#4d9aff; /* síntomas */
+  --ptG:#10b981; /* signos */
+  --extra:#7c3aed; /* extras */
+}
+
+/* Base */
+*{ box-sizing:border-box }
+html,body{ margin:0 }
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  background: var(--bg); color: var(--fg); line-height:1.5;
+  box-shadow: inset 0 100vmax rgba(13, 87, 186, 0.02);
+}
+.page{ max-width:1180px; margin:0 auto; padding:clamp(18px,3vw,30px) }
+h1{ margin:.2rem 0 .25rem }
+.lead{ opacity:.95; font-size:clamp(1rem,1rem + .35vw,1.15rem) }
+
+/* Cards */
+.card{
+  background: var(--card);
+  backdrop-filter: saturate(125%) blur(6px);
+  -webkit-backdrop-filter: saturate(125%) blur(6px);
+  border:1px solid color-mix(in oklab, var(--blue-700) 10%, #ffffff 90%);
+  border-radius:18px;
+  padding:clamp(12px,2vw,18px);
+  box-shadow:
+    0 0 0 1px rgba(15, 100, 214, .05),
+    0 12px 28px -12px rgba(15, 100, 214, .22),
+    0 6px 16px -8px rgba(10, 62, 132, .18);
+}
+.grid{ display:grid; gap:14px }
+@media(min-width:980px){ .grid{ grid-template-columns: 2fr 1fr } }
+
+/* Header controls */
+.row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+.pill{
+  display:inline-flex; gap:.5rem; align-items:center;
+  border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  border-radius:999px; padding:.4rem .7rem;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+select, .input{
+  background: linear-gradient(180deg, #ffffff, #f4f8ff);
+  border-radius: 10px; padding:.25rem .5rem;
+  border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+}
+.btn{
+  appearance:none; border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+  background: linear-gradient(180deg, #ffffff, #f4f8ff);
+  color: #0f172a;
+  padding:.6rem .95rem; border-radius:12px; cursor:pointer; font-weight:700;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 6px 14px -8px rgba(15,100,214,.35);
+  transition: transform .06s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.btn:hover{ border-color: color-mix(in oklab, var(--blue-700) 35%, #fff 65%); box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 10px 22px -10px rgba(15,100,214,.45) }
+.btn:active{ transform: translateY(1px) }
+.btn.primary{
+  background: linear-gradient(180deg, var(--blue-500), var(--blue-700));
+  color:#fff; border-color: transparent;
+  box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 10px 24px -12px rgba(30,125,245,.55);
+}
+.btn.danger{
+  background: linear-gradient(180deg, #fff, #fff);
+  border-color: color-mix(in oklab, var(--danger) 45%, #fff 55%);
+  color: var(--danger);
+}
+
+/* Score box */
+.score{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  border:1px dashed color-mix(in oklab, var(--blue-700) 22%, #fff 78%);
+  border-radius:16px; padding:14px 16px; margin-top:10px;
+  background: linear-gradient(180deg, #ffffff, #f5f9ff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.score .val{ font-size:2rem; font-weight:900; letter-spacing:.4px; color: var(--blue-900) }
+.badge{
+  font-weight:900; padding:.28rem .6rem; border-radius:9px; border:2px solid var(--blue-400);
+  background: linear-gradient(180deg, #ffffff, #eef6ff);
+}
+.badge.none{ border-color:var(--ok) } .badge.mild{ border-color:#60a5fa }
+.badge.mod{ border-color:#f59e0b } .badge.sev{ border-color:var(--danger) }
+
+/* Tabs & counters */
+.section{ margin-top:16px }
+.section h2{ margin:0 0 .7rem; font-size:1.06rem; display:flex; align-items:center; gap:.6rem }
+.tab{
+  display:inline-flex; align-items:center; gap:.5rem; font-size:.92rem;
+  padding:.28rem .6rem; border-radius:999px;
+  border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+  background: linear-gradient(180deg, #ffffff, #f5f9ff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.dot{ width:10px; height:10px; border-radius:999px; box-shadow: 0 0 0 2px #fff inset, 0 0 0 1px rgba(0,0,0,.06) }
+.cS .dot{ background: var(--ptS) } .cG .dot{ background: var(--ptG) } .cX .dot{ background: var(--extra) }
+.count{
+  display:inline-flex; align-items:center; gap:.4rem; font-weight:800;
+  padding:.2rem .6rem; border-radius:999px;
+  border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  background: linear-gradient(180deg, #ffffff, #f3f8ff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+
+/* Items grid */
+.list{ display:grid; gap:10px }
+@media(min-width:720px){ .list{ grid-template-columns: 1fr 1fr } }
+@media(min-width:1100px){ .list{ grid-template-columns: 1fr 1fr 1fr } }
+
+.item{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  padding:12px 14px;
+  border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  border-radius:14px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 10px 18px -14px rgba(15,100,214,.35);
+}
+.item .title{ font-weight:700; }
+.item small{ color: color-mix(in oklab, var(--fg) 55%, #ffffff 45%) }
+
+/* Segmented 0-3 */
+.seg{ display:inline-flex; gap:6px; border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%); border-radius:10px; padding:3px; background:linear-gradient(180deg,#fff,#f4f8ff) }
+.seg label{
+  display:inline-flex; align-items:center; justify-content:center; min-width:34px; height:30px; padding:0 .4rem;
+  border-radius:8px; cursor:pointer; font-weight:700;
+}
+.seg input{ appearance:none; position:absolute; opacity:0; width:0; height:0 }
+.seg input:focus-visible + span{ outline: 3px solid color-mix(in oklab, var(--blue-500) 60%, #fff 40%); outline-offset:2px }
+.seg input:checked + span{ background: linear-gradient(180deg, var(--blue-500), var(--blue-700)); color:#fff; box-shadow: 0 1px 0 rgba(255,255,255,.25) inset }
+
+/* Alert */
+.alert{
+  display:none; margin-top:12px; border-left:5px solid var(--danger); padding:12px 14px;
+  background: linear-gradient(180deg, #fff5f5, #ffecec);
+  border-radius:12px; box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 8px 20px -14px rgba(239,68,68,.35);
+}
+.alert.show{ display:block }
+
+/* Print (PDF) */
+@page{ size:A4; margin:18mm 14mm 18mm 14mm }
+@media print{
+  body{ background:#fff }
+  .page{ padding:0 }
+  .no-print{ display:none !important }
+  header.print-head{
+    display:block; margin-bottom:8mm; text-align:center;
+    border-bottom:2px solid #000; padding-bottom:4mm;
+  }
+  footer.print-foot{
+    position:fixed; bottom:8mm; left:14mm; right:14mm; font-size:.9rem;
+    display:flex; justify-content:space-between;
+  }
+  .print-pg:after{ counter-increment: page; content: counter(page) }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <!-- Cabecera para PDF -->
+  <header class="print-head">
+    <div style="font-weight:800; font-size:1.2rem;">Villalta Severity Score — Informe</div>
+    <div style="opacity:.85">Generado automáticamente — <span id="printDate"></span></div>
+  </header>
+
+  <header class="card no-print">
+    <h1>Villalta Severity Score</h1>
+    <p class="lead">Evalúa <strong>síntomas (5)</strong> y <strong>signos (6)</strong> en escala 0–3. Calcula automáticamente la puntuación total y la severidad. La presencia de <strong>úlcera venosa activa</strong> clasifica como <strong>severo</strong>.</p>
+    <div class="row" style="margin-top:.35rem">
+      <label class="pill">Extremidad:
+        <select id="lado" style="border:none;background:transparent;outline:none;font-weight:700;margin-left:.35rem">
+          <option value="NA" selected>No especificado</option>
+          <option value="Izquierda">Izquierda</option>
+          <option value="Derecha">Derecha</option>
+        </select>
+      </label>
+      <button class="btn" id="btnClear">Limpiar</button>
+      <button class="btn primary" id="btnPDF">Generar PDF</button>
+      <button class="btn danger" id="btnJSON">Exportar selección (JSON)</button>
+      <span class="pill"><strong>0=ausente · 1=leve · 2=moderado · 3=intenso</strong></span>
+    </div>
+    <div class="score" aria-live="polite">
+      <div>
+        <div><strong>Puntuación total:</strong> <span class="val" id="scoreVal">0</span></div>
+        <div class="muted">Severidad: <span id="sevLabel" class="badge none">Sin PTS (0–4)</span></div>
+        <div class="muted" id="catBreakdown" style="margin-top:.25rem"></div>
+      </div>
+      <div class="muted">
+        Criterios: <strong>0–4</strong> Sin PTS · <strong>5–9</strong> Leve · <strong>10–14</strong> Moderado · <strong>≥15</strong> o <em>úlcera</em> = Severo
+      </div>
+    </div>
+    <div id="validator" class="alert"></div>
+  </header>
+
+  <!-- ===== Síntomas (5) ===== -->
+  <section class="card section">
+    <h2><span class="tab cS"><span class="dot"></span>Síntomas (0–15)</span> <span class="count" id="countS">0 con puntuación</span></h2>
+    <div class="list" id="grpS">
+      <!-- plantilla de item: data-key define el nombre del grupo -->
+      <div class="item">
+        <div class="title">Dolor</div>
+        <div class="seg" role="radiogroup" aria-label="Dolor" data-key="dolor">
+          <label><input type="radio" name="dolor" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="dolor" value="1"><span>1</span></label>
+          <label><input type="radio" name="dolor" value="2"><span>2</span></label>
+          <label><input type="radio" name="dolor" value="3"><span>3</span></label>
+        </div>
+        <small>En reposo o al deambular.</small>
+      </div>
+      <div class="item">
+        <div class="title">Calambres</div>
+        <div class="seg" role="radiogroup" aria-label="Calambres" data-key="calambres">
+          <label><input type="radio" name="calambres" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="calambres" value="1"><span>1</span></label>
+          <label><input type="radio" name="calambres" value="2"><span>2</span></label>
+          <label><input type="radio" name="calambres" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Pesadez</div>
+        <div class="seg" role="radiogroup" aria-label="Pesadez" data-key="pesadez">
+          <label><input type="radio" name="pesadez" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="pesadez" value="1"><span>1</span></label>
+          <label><input type="radio" name="pesadez" value="2"><span>2</span></label>
+          <label><input type="radio" name="pesadez" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Parestesias</div>
+        <div class="seg" role="radiogroup" aria-label="Parestesias" data-key="parestesias">
+          <label><input type="radio" name="parestesias" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="parestesias" value="1"><span>1</span></label>
+          <label><input type="radio" name="parestesias" value="2"><span>2</span></label>
+          <label><input type="radio" name="parestesias" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Prurito</div>
+        <div class="seg" role="radiogroup" aria-label="Prurito" data-key="prurito">
+          <label><input type="radio" name="prurito" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="prurito" value="1"><span>1</span></label>
+          <label><input type="radio" name="prurito" value="2"><span>2</span></label>
+          <label><input type="radio" name="prurito" value="3"><span>3</span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Signos (6) ===== -->
+  <section class="card section">
+    <h2><span class="tab cG"><span class="dot"></span>Signos (0–18)</span> <span class="count" id="countG">0 con puntuación</span></h2>
+    <div class="list" id="grpG">
+      <div class="item">
+        <div class="title">Edema pretibial</div>
+        <div class="seg" role="radiogroup" aria-label="Edema pretibial" data-key="edema">
+          <label><input type="radio" name="edema" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="edema" value="1"><span>1</span></label>
+          <label><input type="radio" name="edema" value="2"><span>2</span></label>
+          <label><input type="radio" name="edema" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Induración cutánea</div>
+        <div class="seg" role="radiogroup" aria-label="Induración cutánea" data-key="induracion">
+          <label><input type="radio" name="induracion" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="induracion" value="1"><span>1</span></label>
+          <label><input type="radio" name="induracion" value="2"><span>2</span></label>
+          <label><input type="radio" name="induracion" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Hiperpigmentación</div>
+        <div class="seg" role="radiogroup" aria-label="Hiperpigmentación" data-key="hiperpig">
+          <label><input type="radio" name="hiperpig" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="hiperpig" value="1"><span>1</span></label>
+          <label><input type="radio" name="hiperpig" value="2"><span>2</span></label>
+          <label><input type="radio" name="hiperpig" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Eritema</div>
+        <div class="seg" role="radiogroup" aria-label="Eritema" data-key="eritema">
+          <label><input type="radio" name="eritema" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="eritema" value="1"><span>1</span></label>
+          <label><input type="radio" name="eritema" value="2"><span>2</span></label>
+          <label><input type="radio" name="eritema" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Ectasia venosa (venas dilatadas)</div>
+        <div class="seg" role="radiogroup" aria-label="Ectasia venosa" data-key="ectasia">
+          <label><input type="radio" name="ectasia" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="ectasia" value="1"><span>1</span></label>
+          <label><input type="radio" name="ectasia" value="2"><span>2</span></label>
+          <label><input type="radio" name="ectasia" value="3"><span>3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Dolor a la compresión de la pantorrilla</div>
+        <div class="seg" role="radiogroup" aria-label="Dolor a la compresión" data-key="dolorcomp">
+          <label><input type="radio" name="dolorcomp" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="dolorcomp" value="1"><span>1</span></label>
+          <label><input type="radio" name="dolorcomp" value="2"><span>2</span></label>
+          <label><input type="radio" name="dolorcomp" value="3"><span>3</span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Extra: úlcera activa ===== -->
+  <section class="card section">
+    <h2><span class="tab cX"><span class="dot"></span>Condición adicional</span></h2>
+    <div class="item">
+      <div class="title">Úlcera venosa activa (presente)</div>
+      <label class="seg" aria-label="Úlcera venosa activa" data-key="ulcera" style="gap:8px">
+        <label><input type="radio" name="ulcera" value="no" checked><span>No</span></label>
+        <label><input type="radio" name="ulcera" value="si"><span>Sí</span></label>
+      </label>
+      <small>Si está presente, la <strong>clasificación es Severo</strong> independientemente de la suma.</small>
+    </div>
+  </section>
+
+  <!-- ===== Recomendaciones ===== -->
+  <section class="card section" id="recSection">
+    <h2><span class="tab"><span class="dot" style="background:var(--blue-600)"></span>Cuadro de recomendaciones</span></h2>
+    <div id="recBox" class="lead" style="font-size:1rem">
+      <p style="margin:.25rem 0 .5rem"><strong>Sin PTS (0–4):</strong> Educación, higiene cutánea, actividad física regular y control de factores de riesgo; reevaluar si cambian los síntomas.</p>
+      <ul style="margin:0; padding-left:1.1rem">
+        <li>Evitar inmovilización prolongada; elevación de piernas tras actividad.</li>
+        <li>Considerar medias elásticas si hay molestias leves intermitentes.</li>
+      </ul>
+      <p class="muted" style="margin:.6rem 0 0">⚠️ Orientativo. Individualizar con guías locales y criterio clínico.</p>
+    </div>
+  </section>
+
+  <!-- ===== Interpretación / Abreviaturas / Referencias ===== -->
+  <section class="card section grid">
+    <div>
+      <h2>Interpretación</h2>
+      <ul class="muted" style="margin-top:.25rem">
+        <li><strong>0–4</strong> = Sin PTS</li>
+        <li><strong>5–9</strong> = Leve</li>
+        <li><strong>10–14</strong> = Moderado</li>
+        <li><strong>≥15</strong> o <em>úlcera</em> = Severo</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Abreviaturas</h2>
+      <ul class="muted">
+        <li><strong>PTS</strong>: síndrome postrombótico</li>
+        <li><strong>TVP</strong>: trombosis venosa profunda</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="card section">
+    <h2>Referencias (APA 7)</h2>
+    <ol class="muted" style="padding-left:1.1rem; margin-top:.25rem">
+      <li>Kahn, S. R. (2009). Measurement properties of the Villalta scale to define and classify the severity of the post-thrombotic syndrome. <em>Journal of Thrombosis and Haemostasis, 7</em>(5), 884–888. https://doi.org/10.1111/j.1538-7836.2009.03339.x</li>
+      <li>Kahn, S. R., et&nbsp;al. (2009). Definition of post-thrombotic syndrome of the leg for use in clinical investigations. <em>Journal of Thrombosis and Haemostasis, 7</em>(5), 879–883. https://doi.org/10.1111/j.1538-7836.2009.03294.x</li>
+      <li>Soosainathan, A., et&nbsp;al. (2013). Scoring systems for the post-thrombotic syndrome. <em>Journal of Vascular Surgery, 57</em>(1), 254–261. https://doi.org/10.1016/j.jvs.2012.07.051</li>
+    </ol>
+  </section>
+
+  <footer class="print-foot">
+    <div>Villalta Severity Score — Uso informativo</div>
+    <div>Pág. <span class="print-pg"></span></div>
+  </footer>
+</main>
+
+<script>
+  // ===== Helpers =====
+  const $ = (s,ctx=document)=>ctx.querySelector(s);
+  const $$ = (s,ctx=document)=>Array.from(ctx.querySelectorAll(s));
+
+  const scoreVal = $('#scoreVal');
+  const sevLabel = $('#sevLabel');
+  const validator = $('#validator');
+
+  function getUlcer(){ return $('input[name="ulcera"]:checked')?.value === 'si'; }
+
+  // Sumatorio: total de las 11 variables (0-3)
+  function computeTotal(){
+    let total = 0;
+    $$('.seg[aria-label], .seg[role="radiogroup"]').forEach(seg=>{
+      const name = seg.dataset.key;
+      if(!name || name==='ulcera') return;
+      const val = Number(($(`input[name="${name}"]:checked`)||{}).value||0);
+      total += val;
+    });
+    return total;
+  }
+
+  function getSeverity(total, hasUlcer){
+    if(hasUlcer) return {key:'sev', label:'Severo (úlcera o ≥15)'};
+    if(total >= 15) return {key:'sev', label:'Severo (≥15)'};
+    if(total >= 10) return {key:'mod', label:'Moderado (10–14)'};
+    if(total >= 5)  return {key:'mild', label:'Leve (5–9)'};
+    return {key:'none', label:'Sin PTS (0–4)'};
+  }
+
+  function setRecommendations(total, hasUlcer){
+    const sev = getSeverity(total, hasUlcer).key;
+    const map = {
+      none: {
+        title: 'Sin PTS (0–4)',
+        items: [
+          'Educación y autocuidado cutáneo.',
+          'Actividad física regular; evitar inmovilización prolongada.',
+          'Considerar medias elásticas si síntomas leves intermitentes.'
+        ]
+      },
+      mild: {
+        title: 'Leve (5–9)',
+        items: [
+          'Medias de compresión graduada si no hay contraindicaciones.',
+          'Ejercicio, elevación de piernas tras actividad y control de peso.',
+          'Reevaluación periódica de síntomas y respuesta al tratamiento.'
+        ]
+      },
+      mod: {
+        title: 'Moderado (10–14)',
+        items: [
+          'Compresión (medias/clasificación adecuada) y fisioterapia dirigida.',
+          'Valorar derivación a unidad de patología venosa.',
+          'Ajuste del plan según tolerancia y evolución clínica.'
+        ]
+      },
+      sev: {
+        title: hasUlcer ? 'Severo por úlcera activa' : 'Severo (≥15)',
+        items: [
+          'Manejo multidisciplinar: compresión intensiva y cuidado avanzado de heridas si hay úlcera.',
+          'Derivación especializada (patología venosa) para estudio/optimización.',
+          'Plan individualizado y seguimiento estrecho.'
+        ]
+      }
+    }[sev];
+
+    const box = $('#recBox');
+    box.innerHTML = `
+      <p style="margin:.25rem 0 .5rem"><strong>${map.title}:</strong></p>
+      <ul style="margin:0; padding-left:1.1rem">
+        ${map.items.map(it=>`<li>${it}</li>`).join('')}
+      </ul>
+      <p class="muted" style="margin:.6rem 0 0">⚠️ Recomendaciones orientativas. Individualizar según guía local y criterio clínico.</p>
+    `;
+  }
+
+  function computeCounters(){
+    const countNonZero = (grpSel)=>{
+      let c = 0;
+      $$(grpSel+' .seg').forEach(seg=>{
+        const name = seg.dataset.key;
+        if(!name || name==='ulcera') return;
+        const val = Number(($(`input[name="${name}"]:checked`)||{}).value||0);
+        if(val>0) c++;
+      });
+      return c;
+    };
+    const s = countNonZero('#grpS');
+    const g = countNonZero('#grpG');
+    $('#countS').textContent = (s===1? '1 con puntuación' : `${s} con puntuación`);
+    $('#countG').textContent = (g===1? '1 con puntuación' : `${g} con puntuación`);
+    $('#catBreakdown').textContent = `Síntomas >0: ${s} · Signos >0: ${g}`;
+  }
+
+  function validateForm(total, hasUlcer){
+    const msgs = [];
+    // Aviso si úlcera activa pero la suma es muy baja (posible inconsistencia de registro)
+    if(hasUlcer && total < 5){
+      msgs.push('Has marcado úlcera venosa activa con puntuación baja en signos/síntomas. Verifica la consistencia de la evaluación.');
+    }
+    if(msgs.length){
+      validator.innerHTML = '<strong>Revisa:</strong><ul style="margin:.35rem 0 0; padding-left:1.1rem">' +
+        msgs.map(m=>`<li>${m}</li>`).join('') + '</ul>';
+      validator.classList.add('show');
+    } else {
+      validator.classList.remove('show');
+      validator.innerHTML = '';
+    }
+  }
+
+  function updateUI(){
+    const total = computeTotal();
+    const hasUlcer = getUlcer();
+    scoreVal.textContent = String(total);
+
+    const sev = getSeverity(total, hasUlcer);
+    sevLabel.className = 'badge ' + sev.key;
+    sevLabel.textContent = sev.label;
+
+    setRecommendations(total, hasUlcer);
+    computeCounters();
+    validateForm(total, hasUlcer);
+  }
+
+  // Export JSON
+  function exportJSON(){
+    const allKeys = [
+      'dolor','calambres','pesadez','parestesias','prurito',
+      'edema','induracion','hiperpig','eritema','ectasia','dolorcomp'
+    ];
+    const data = {
+      fecha: new Date().toISOString(),
+      extremidad: $('#lado').value,
+      ulcera_activa: getUlcer(),
+      items: Object.fromEntries(allKeys.map(k=>[k, Number(($(`input[name="${k}"]:checked`)||{}).value||0)])),
+      puntuacion: Number($('#scoreVal').textContent),
+      severidad: $('#sevLabel').textContent
+    };
+    const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `villalta_${new Date().toISOString().slice(0,10)}.json`;
+    a.click(); URL.revokeObjectURL(a.href);
+  }
+
+  // PDF
+  function genPDF(){
+    $('#printDate').textContent = new Date().toLocaleString();
+    window.print();
+  }
+
+  // Eventos
+  $$( 'input, select' ).forEach(el=>el.addEventListener('change', updateUI));
+  $('#btnClear').addEventListener('click', ()=>{
+    // Reset radios 0–3
+    $$('.seg').forEach(seg=>{
+      const name = seg.dataset.key;
+      if(!name) return;
+      if(name==='ulcera'){ $(`input[name="ulcera"][value="no"]`).checked = true; return; }
+      $(`input[name="${name}"][value="0"]`).checked = true;
+    });
+    $('#lado').value = 'NA';
+    updateUI();
+  });
+  $('#btnPDF').addEventListener('click', genPDF);
+  $('#btnJSON').addEventListener('click', exportJSON);
+
+  // Init
+  updateUI();
+</script>
+</body>
+</html>

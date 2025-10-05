@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VCSS — Venous Clinical Severity Score</title>
+<meta name="color-scheme" content="light dark">
+<style>
+/* ========= Blue Pro Theme ========= */
+:root{
+  --blue-50:#f0f6ff; --blue-100:#e2eeff; --blue-200:#cfe3ff; --blue-300:#b3d3ff;
+  --blue-400:#80b6ff; --blue-500:#4d9aff; --blue-600:#1e7df5; --blue-700:#0f64d6;
+  --blue-800:#0b4ea8; --blue-900:#0a3e84;
+
+  --bg: linear-gradient(135deg, var(--blue-50) 0%, #ffffff 40%, #f7fbff 100%);
+  --fg: #0b1220; --muted: color-mix(in oklab, var(--fg) 55%, #ffffff 45%);
+  --card: rgba(255,255,255,.85);
+  --border: color-mix(in oklab, var(--blue-900) 10%, #ffffff 90%);
+
+  --ok:#16a34a; --warn:#f59e0b; --danger:#ef4444; --info: var(--blue-700);
+  --cCore:#4d9aff; /* signos/síntomas básicos (6) */
+  --cUlcer:#10b981; /* bloque úlcera (3) */
+  --cComp:#7c3aed;  /* compresión (1) */
+}
+
+*{ box-sizing:border-box } html,body{ margin:0 }
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  background: var(--bg); color: var(--fg); line-height:1.5;
+  box-shadow: inset 0 100vmax rgba(13, 87, 186, 0.02);
+}
+.page{ max-width:1180px; margin:0 auto; padding:clamp(18px,3vw,30px) }
+h1{ margin:.2rem 0 .4rem } .lead{ opacity:.95; font-size:clamp(1rem,1rem + .35vw,1.15rem) }
+.card{
+  background: var(--card);
+  backdrop-filter: saturate(125%) blur(6px); -webkit-backdrop-filter: saturate(125%) blur(6px);
+  border:1px solid color-mix(in oklab, var(--blue-700) 10%, #ffffff 90%);
+  border-radius:18px; padding:clamp(12px,2vw,18px);
+  box-shadow: 0 0 0 1px rgba(15,100,214,.05), 0 12px 28px -12px rgba(15,100,214,.22), 0 6px 16px -8px rgba(10,62,132,.18);
+}
+.grid{ display:grid; gap:14px } @media(min-width:980px){ .grid{ grid-template-columns: 2fr 1fr } }
+.row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center }
+
+.pill{
+  display:inline-flex; gap:.5rem; align-items:center; border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%);
+  border-radius:999px; padding:.4rem .7rem; background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+select, .input{
+  background: linear-gradient(180deg, #ffffff, #f4f8ff); border-radius:10px; padding:.35rem .55rem;
+  border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+}
+.btn{
+  appearance:none; border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%);
+  background: linear-gradient(180deg, #ffffff, #f4f8ff); color:#0f172a;
+  padding:.6rem .95rem; border-radius:12px; cursor:pointer; font-weight:700;
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 6px 14px -8px rgba(15,100,214,.35);
+  transition: transform .06s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.btn:hover{ border-color: color-mix(in oklab, var(--blue-700) 35%, #fff 65%); box-shadow: 0 1px 0 rgba(255,255,255,.95) inset, 0 10px 22px -10px rgba(15,100,214,.45) }
+.btn:active{ transform: translateY(1px) }
+.btn.primary{ background: linear-gradient(180deg, var(--blue-500), var(--blue-700)); color:#fff; border-color:transparent; box-shadow: 0 1px 0 rgba(255,255,255,.25) inset, 0 10px 24px -12px rgba(30,125,245,.55) }
+.btn.danger{ background:#fff; border-color: color-mix(in oklab, var(--danger) 45%, #fff 55%); color: var(--danger) }
+
+/* Score box */
+.score{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  border:1px dashed color-mix(in oklab, var(--blue-700) 22%, #fff 78%);
+  border-radius:16px; padding:14px 16px; margin-top:10px; background: linear-gradient(180deg, #ffffff, #f5f9ff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset;
+}
+.score .val{ font-size:2rem; font-weight:900; letter-spacing:.4px; color: var(--blue-900) }
+.badge{ font-weight:900; padding:.28rem .6rem; border-radius:9px; border:2px solid var(--blue-400); background: linear-gradient(180deg, #ffffff, #eef6ff) }
+
+/* Tabs & counters */
+.section{ margin-top:16px }
+.section h2{ margin:0 0 .7rem; font-size:1.06rem; display:flex; align-items:center; gap:.6rem }
+.tab{ display:inline-flex; align-items:center; gap:.5rem; font-size:.92rem; padding:.28rem .6rem; border-radius:999px; border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%); background: linear-gradient(180deg, #ffffff, #f5f9ff); box-shadow: 0 1px 0 rgba(255,255,255,.9) inset }
+.dot{ width:10px; height:10px; border-radius:999px; box-shadow: 0 0 0 2px #fff inset, 0 0 0 1px rgba(0,0,0,.06) }
+.cCore .dot{ background: var(--cCore) } .cUlcer .dot{ background: var(--cUlcer) } .cComp .dot{ background: var(--cComp) }
+.count{ display:inline-flex; align-items:center; gap:.4rem; font-weight:800; padding:.2rem .6rem; border-radius:999px; border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%); background: linear-gradient(180deg, #ffffff, #f3f8ff); box-shadow: 0 1px 0 rgba(255,255,255,.9) inset }
+
+/* Items grid */
+.list{ display:grid; gap:10px } @media(min-width:720px){ .list{ grid-template-columns: 1fr 1fr } } @media(min-width:1100px){ .list{ grid-template-columns: 1fr 1fr 1fr } }
+.item{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px; padding:12px 14px;
+  border:1px solid color-mix(in oklab, var(--blue-700) 16%, #fff 84%); border-radius:14px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 10px 18px -14px rgba(15,100,214,.35);
+}
+.item .title{ font-weight:700 } .item small{ color: color-mix(in oklab, var(--fg) 55%, #ffffff 45%) }
+
+/* Segmented 0-3 */
+.seg{ display:inline-flex; gap:6px; border:1px solid color-mix(in oklab, var(--blue-700) 18%, #fff 82%); border-radius:10px; padding:3px; background:linear-gradient(180deg,#fff,#f4f8ff) }
+.seg label{ display:inline-flex; align-items:center; justify-content:center; min-width:34px; height:30px; padding:0 .4rem; border-radius:8px; cursor:pointer; font-weight:700 }
+.seg input{ appearance:none; position:absolute; opacity:0; width:0; height:0 }
+.seg input:focus-visible + span{ outline: 3px solid color-mix(in oklab, var(--blue-500) 60%, #fff 40%); outline-offset:2px }
+.seg input:checked + span{ background: linear-gradient(180deg, var(--blue-500), var(--blue-700)); color:#fff; box-shadow: 0 1px 0 rgba(255,255,255,.25) inset }
+
+/* Tooltip */
+.tip{ border:none; background:transparent; cursor:pointer; font-weight:800; color:var(--blue-700); padding:.1rem .35rem; border-radius:8px }
+.tip[data-tip]{ position:relative }
+.tip[data-tip]:hover::after{
+  content: attr(data-tip);
+  position:absolute; left:50%; transform: translateX(-50%); top: 140%;
+  min-width: 220px; max-width: 320px; z-index:50;
+  background:#0b1b36; color:#fff; padding:.55rem .7rem; border-radius:10px; font-size:.85rem; line-height:1.25;
+  box-shadow: 0 10px 24px -10px rgba(0,0,0,.45);
+}
+.tip[data-tip]:hover::before{
+  content:''; position:absolute; left:50%; transform: translateX(-50%); top: 130%;
+  border:8px solid transparent; border-bottom-color:#0b1b36;
+}
+
+/* Alert */
+.alert{
+  display:none; margin-top:12px; border-left:5px solid var(--danger); padding:12px 14px;
+  background: linear-gradient(180deg, #fff5f5, #ffecec);
+  border-radius:12px; box-shadow: 0 1px 0 rgba(255,255,255,.9) inset, 0 8px 20px -14px rgba(239,68,68,.35);
+}
+.alert.show{ display:block }
+
+/* Print (PDF) */
+@page{ size:A4; margin:18mm 14mm 18mm 14mm }
+@media print{
+  body{ background:#fff } .page{ padding:0 } .no-print{ display:none !important }
+  header.print-head{ display:block; margin-bottom:8mm; border-bottom:2px solid #000; padding-bottom:4mm }
+  .print-head .row{ justify-content:space-between; align-items:center }
+  .print-logo{ height:40px; object-fit:contain }
+  footer.print-foot{ position:fixed; bottom:8mm; left:14mm; right:14mm; font-size:.9rem; display:flex; justify-content:space-between }
+  .print-pg:after{ counter-increment: page; content: counter(page) }
+  .print-only{ display:block !important }
+}
+.print-only{ display:none }
+</style>
+</head>
+<body>
+<main class="page">
+  <!-- Cabecera para PDF -->
+  <header class="print-head">
+    <div class="row">
+      <div style="display:flex; align-items:center; gap:10px">
+        <img id="printLogo" class="print-logo" alt="Logo" />
+        <div>
+          <div style="font-weight:800; font-size:1.2rem;">VCSS — Venous Clinical Severity Score (Informe)</div>
+          <div style="opacity:.85">Generado automáticamente — <span id="printDate"></span></div>
+        </div>
+      </div>
+      <div id="printPatient" style="text-align:right; font-size:.95rem"></div>
+    </div>
+  </header>
+
+  <header class="card no-print">
+    <h1>VCSS — Venous Clinical Severity Score</h1>
+    <p class="lead">Evalúa los 10 ítems del VCSS (0–3 cada uno; total 0–30). Incluye definiciones rápidas, resumen por extremidad y PDF corporativo con logo.</p>
+
+    <div class="row" style="margin-top:.35rem">
+      <label class="pill">Paciente: <input class="input" id="paciente" placeholder="Nombre y apellidos" /></label>
+      <label class="pill">ID/HC: <input class="input" id="idpac" placeholder="Opcional" /></label>
+      <label class="pill">CEAP (C): 
+        <select id="ceap" style="border:none;background:transparent;outline:none;font-weight:700;margin-left:.35rem">
+          <option value="">No especificado</option>
+          <option>C0</option><option>C1</option><option>C2</option><option>C3</option>
+          <option>C4a</option><option>C4b</option><option>C5</option><option>C6</option>
+        </select>
+      </label>
+      <label class="pill">Extremidad:
+        <select id="lado" style="border:none;background:transparent;outline:none;font-weight:700;margin-left:.35rem">
+          <option value="NA" selected>No especificado</option>
+          <option value="Izquierda">Izquierda</option>
+          <option value="Derecha">Derecha</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="row" style="margin-top:.35rem">
+      <label class="pill">Logo:
+        <input type="file" id="logoInput" accept="image/*" style="border:none;background:transparent;outline:none;margin-left:.35rem" />
+      </label>
+      <button class="btn" id="btnClear">Limpiar</button>
+      <button class="btn" id="btnSaveSide">Guardar miembro en informe</button>
+      <button class="btn primary" id="btnPDF">Generar PDF</button>
+      <button class="btn danger" id="btnJSON">Exportar informe (JSON)</button>
+      <span class="pill"><strong>0=ausente · 1=leve · 2=moderado · 3=intenso/severo</strong></span>
+    </div>
+
+    <div class="score" aria-live="polite">
+      <div>
+        <div><strong>Puntuación total:</strong> <span class="val" id="scoreVal">0</span> <span class="badge" id="bandLabel">0–30</span></div>
+        <div class="muted" id="catBreakdown" style="margin-top:.25rem"></div>
+      </div>
+      <div class="muted">Los ítems de úlcera (n.º, duración, tamaño) aplican solo si hay úlcera activa.</div>
+    </div>
+    <div id="validator" class="alert"></div>
+  </header>
+
+  <!-- ===== Núcleo (6) ===== -->
+  <section class="card section">
+    <h2><span class="tab cCore"><span class="dot"></span>Signos y síntomas nucleares</span> <span class="count" id="countCore">0 con puntuación</span></h2>
+    <div class="list" id="grpCore">
+      <div class="item">
+        <div class="title">Dolor
+          <button class="tip" aria-label="Definición" data-tip="0: ninguno · 1: ocasional, no limita actividad · 2: diario, limita parcialmente · 3: diario intenso, requiere analgésicos o limita actividades.">?</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Dolor" data-key="dolor">
+          <label><input type="radio" name="dolor" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="dolor" value="1"><span>1</span></label>
+          <label><input type="radio" name="dolor" value="2"><span>2</span></label>
+          <label><input type="radio" name="dolor" value="3"><span>3</span></label>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="title">Várices
+          <button class="tip" data-tip="Venas ≥3 mm. 0: ausentes · 1: localizadas · 2: múltiples segmentos · 3: extensas/cordonadas.">?</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Várices" data-key="varices">
+          <label><input type="radio" name="varices" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="varices" value="1"><span>1</span></label>
+          <label><input type="radio" name="varices" value="2"><span>2</span></label>
+          <label><input type="radio" name="varices" value="3"><span>3</span></label>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="title">Edema venoso
+          <button class="tip" data-tip="0: ninguno · 1: vespertino · 2: vespertino/mediodía con fóvea · 3: matutino o afecta pie/tobillo de forma marcada.">?</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Edema venoso" data-key="edema">
+          <label><input type="radio" name="edema" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="edema" value="1"><span>1</span></label>
+          <label><input type="radio" name="edema" value="2"><span>2</span></label>
+          <label><input type="radio" name="edema" value="3"><span>3</span></label>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="title">Hiperpigmentación
+          <button class="tip" data-tip="0: ninguna · 1: limitada (tercio inferior) · 2: extendida · 3: circunferencial/ marcada.">?</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Hiperpigmentación" data-key="hiperpig">
+          <label><input type="radio" name="hiperpig" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="hiperpig" value="1"><span>1</span></label>
+          <label><input type="radio" name="hiperpig" value="2"><span>2</span></label>
+          <label><input type="radio" name="hiperpig" value="3"><span>3</span></label>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="title">Inflamación
+          <button class="tip" data-tip="0: ninguna · 1: leve/local · 2: moderada · 3: intensa o celulitis asociada.">?</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Inflamación" data-key="inflam">
+          <label><input type="radio" name="inflam" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="inflam" value="1"><span>1</span></label>
+          <label><input type="radio" name="inflam" value="2"><span>2</span></label>
+          <label><input type="radio" name="inflam" value="3"><span>3</span></label>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="title">Induración (lipodermatoesclerosis)
+          <button class="tip" data-tip="0: ninguna · 1: limitada · 2: extensa pero no circunferencial · 3: circunferencial o marcada.">?</button>
+        </div>
+        <div class="seg" role="radiogroup" aria-label="Induración" data-key="induracion">
+          <label><input type="radio" name="induracion" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="induracion" value="1"><span>1</span></label>
+          <label><input type="radio" name="induracion" value="2"><span>2</span></label>
+          <label><input type="radio" name="induracion" value="3"><span>3</span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Úlcera activa (3) ===== -->
+  <section class="card section">
+    <h2><span class="tab cUlcer"><span class="dot"></span>Úlcera venosa activa (si procede)</span> <span class="count" id="countUlc">0 con puntuación</span></h2>
+    <div class="list" id="grpUlc">
+      <div class="item">
+        <div class="title">Número de úlceras activas</div>
+        <div class="seg" role="radiogroup" aria-label="Número de úlceras" data-key="ulc_n">
+          <label><input type="radio" name="ulc_n" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="ulc_n" value="1"><span>1</span></label>
+          <label><input type="radio" name="ulc_n" value="2"><span>2</span></label>
+          <label><input type="radio" name="ulc_n" value="3"><span>≥3</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Duración de la(s) úlcera(s)</div>
+        <div class="seg" role="radiogroup" aria-label="Duración de úlceras" data-key="ulc_t">
+          <label><input type="radio" name="ulc_t" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="ulc_t" value="1"><span>&lt;3m</span></label>
+          <label><input type="radio" name="ulc_t" value="2"><span>3–12m</span></label>
+          <label><input type="radio" name="ulc_t" value="3"><span>&gt;12m</span></label>
+        </div>
+      </div>
+      <div class="item">
+        <div class="title">Tamaño (mayor diámetro)</div>
+        <div class="seg" role="radiogroup" aria-label="Tamaño de úlcera" data-key="ulc_s">
+          <label><input type="radio" name="ulc_s" value="0" checked><span>0</span></label>
+          <label><input type="radio" name="ulc_s" value="1"><span>&lt;2&nbsp;cm</span></label>
+          <label><input type="radio" name="ulc_s" value="2"><span>2–6&nbsp;cm</span></label>
+          <label><input type="radio" name="ulc_s" value="3"><span>&gt;6&nbsp;cm</span></label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Compresión (1) ===== -->
+  <section class="card section">
+    <h2><span class="tab cComp"><span class="dot"></span>Compresión (adherencia)</span></h2>
+    <div class="item">
+      <div class="title">Uso de terapia compresiva
+        <button class="tip" data-tip="0: no usa/no indicado · 1: intermitente · 2: la mayor parte de los días · 3: adhesión plena/diaria.">?</button>
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Compresión" data-key="comp">
+        <label><input type="radio" name="comp" value="0" checked><span>0</span></label>
+        <label><input type="radio" name="comp" value="1"><span>1</span></label>
+        <label><input type="radio" name="comp" value="2"><span>2</span></label>
+        <label><input type="radio" name="comp" value="3"><span>3</span></label>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Recomendaciones ===== -->
+  <section class="card section" id="recSection">
+    <h2><span class="tab"><span class="dot" style="background:var(--blue-600)"></span>Cuadro de recomendaciones</span></h2>
+    <div id="recBox" class="lead" style="font-size:1rem">
+      <p style="margin:.25rem 0 .5rem"><strong>Banda 0–4 (muy baja carga clínica):</strong> educación, higiene cutánea, actividad física regular, control ponderal.</p>
+      <ul style="margin:0; padding-left:1.1rem">
+        <li>Considerar compresión si síntomas esporádicos.</li>
+      </ul>
+      <p class="muted" style="margin:.6rem 0 0">⚠️ Orientativo. Individualizar con CEAP y guías locales; material informativo.</p>
+    </div>
+  </section>
+
+  <!-- ===== Resumen por extremidad (para PDF) ===== -->
+  <section class="card section">
+    <h2><span class="tab"><span class="dot" style="background:var(--blue-500)"></span>Resumen del informe (extremidades guardadas)</span></h2>
+    <div id="reportTable" class="muted">Todavía no hay miembros guardados. Usa “Guardar miembro en informe”.</div>
+    <div class="print-only" id="printNote" style="margin-top:.5rem; font-size:.9rem; opacity:.85">Incluye los miembros guardados en esta sesión y los datos de cabecera.</div>
+  </section>
+
+  <!-- ===== Referencias / Abreviaturas ===== -->
+  <section class="card section grid">
+    <div>
+      <h2>Abreviaturas</h2>
+      <ul class="muted">
+        <li><strong>VCSS</strong>: Venous Clinical Severity Score</li>
+        <li><strong>CEAP</strong>: Clinical–Etiology–Anatomy–Pathophysiology</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Referencias (APA 7)</h2>
+      <ol class="muted" style="padding-left:1.1rem; margin-top:.25rem">
+        <li>Vásquez, M. A., Rabe, E., McLafferty, R. B., Shortell, C. K., Meissner, M. H., et&nbsp;al. (2010). Revision of the Venous Clinical Severity Score. <em>Journal of Vascular Surgery, 52</em>(5), 1387–1396. https://doi.org/10.1016/j.jvs.2010.06.017</li>
+        <li>Meissner, M. H., et&nbsp;al. (2002). Performance characteristics of the Venous Clinical Severity Score. <em>Journal of Vascular Surgery, 36</em>(5), 889–895. https://doi.org/10.1067/mva.2002.128637</li>
+        <li>Passman, M. A., et&nbsp;al. (2011). Validation of the VCSS with other venous assessment tools. <em>Journal of Vascular Surgery, 54</em>(6 Suppl), 9S–10S. https://doi.org/10.1016/j.jvs.2011.05.118</li>
+      </ol>
+    </div>
+  </section>
+
+  <footer class="print-foot">
+    <div>VCSS — uso informativo; complementar con CEAP y juicio clínico</div>
+    <div>Pág. <span class="print-pg"></span></div>
+  </footer>
+</main>
+
+<script>
+/* ===== Helpers & State ===== */
+const $ = (s,ctx=document)=>ctx.querySelector(s);
+const $$ = (s,ctx=document)=>Array.from(ctx.querySelectorAll(s));
+
+const scoreVal = $('#scoreVal');
+const bandLabel = $('#bandLabel');
+const validator = $('#validator');
+
+const groups = {
+  core: ['dolor','varices','edema','hiperpig','inflam','induracion'],
+  ulcer: ['ulc_n','ulc_t','ulc_s'],
+  comp: ['comp']
+};
+const report = { Izquierda:null, Derecha:null }; // snapshots por miembro
+let logoDataURL = ''; // para PDF
+
+function getVal(name){ return Number(($(`input[name="${name}"]:checked`)||{}).value||0); }
+function hasUlcer(){ return getVal('ulc_n')>0 || getVal('ulc_t')>0 || getVal('ulc_s')>0; }
+
+/* ===== Lógica VCSS ===== */
+function computeTotal(){
+  let total = 0;
+  [...groups.core, ...groups.ulcer, ...groups.comp].forEach(k=> total += getVal(k));
+  return total;
+}
+
+function setBand(total){
+  // Bandas orientativas para recomendaciones (no umbrales oficiales)
+  let key='b0', label='0–30';
+  if(total<=4){ key='b0'; label='0–4'; }
+  else if(total<=9){ key='b1'; label='5–9'; }
+  else if(total<=19){ key='b2'; label='10–19'; }
+  else { key='b3'; label='≥20'; }
+  bandLabel.textContent = label;
+  bandLabel.dataset.band = key;
+}
+
+function computeCounters(){
+  const countNonZero = arr => arr.reduce((a,k)=> a + (getVal(k)>0?1:0), 0);
+  const cCore = countNonZero(groups.core);
+  const cUlc  = countNonZero(groups.ulcer);
+  const cComp = getVal('comp')>0 ? 1 : 0;
+  $('#countCore').textContent = (cCore===1? '1 con puntuación' : `${cCore} con puntuación`);
+  $('#countUlc').textContent  = (cUlc===1? '1 con puntuación'  : `${cUlc} con puntuación`);
+  $('#catBreakdown').textContent = `Núcleo >0: ${cCore} · Úlcera >0: ${cUlc} · Compresión: ${cComp? 'sí':'no'}`;
+}
+
+function validateForm(){
+  const msgs = [];
+  // Consistencia de úlcera: si n.º=0 entonces duración y tamaño deben ser 0
+  if(getVal('ulc_n')===0 && (getVal('ulc_t')>0 || getVal('ulc_s')>0)){
+    msgs.push('Has indicado duración/tamaño de úlcera con “n.º de úlceras = 0”. Corrige los ítems de úlcera.');
+  }
+  // Desactivar controles de duración/tamaño si ulc_n=0
+  const ulcPresent = getVal('ulc_n')>0;
+  ['ulc_t','ulc_s'].forEach(k=>{
+    const seg = $(`.seg[data-key="${k}"]`);
+    if(!ulcPresent){
+      $(`input[name="${k}"][value="0"]`).checked = true;
+      seg.setAttribute('aria-disabled','true');
+      seg.style.opacity = .6; seg.style.pointerEvents='none';
+    }else{
+      seg.removeAttribute('aria-disabled');
+      seg.style.opacity = ''; seg.style.pointerEvents='';
+    }
+  });
+
+  if(msgs.length){
+    validator.innerHTML = '<strong>Revisa:</strong><ul style="margin:.35rem 0 0; padding-left:1.1rem">' +
+      msgs.map(m=>`<li>${m}</li>`).join('') + '</ul>';
+    validator.classList.add('show');
+  } else {
+    validator.classList.remove('show');
+    validator.innerHTML = '';
+  }
+}
+
+function setRecommendations(total){
+  const band = bandLabel.dataset.band || 'b0';
+  const ulcer = hasUlcer();
+  const map = {
+    b0: {
+      title: 'Banda 0–4 (muy baja carga clínica)',
+      items: [
+        'Educación, higiene cutánea y ejercicio; evitar inmovilización.',
+        'Control ponderal y de factores favorecedores (calor, ortostatismo prolongado).',
+        'Considerar medias elásticas si síntomas ocasionales.'
+      ]
+    },
+    b1: {
+      title: 'Banda 5–9 (leve)',
+      items: [
+        'Compresión graduada (clase y talla adecuadas) si no hay contraindicaciones.',
+        'Elevación de piernas post-actividad; fisioterapia y marcha.',
+        'Reevaluación periódica VCSS/CEAP.'
+      ]
+    },
+    b2: {
+      title: 'Banda 10–19 (moderada)',
+      items: [
+        'Optimizar compresión; valorar derivación a unidad venosa.',
+        'Cuidado de piel (emolientes; medidas según criterio).',
+        'Considerar imagen y opciones intervencionistas si sintomático.'
+      ]
+    },
+    b3: {
+      title: 'Banda ≥20 (alta)',
+      items: [
+        'Plan individualizado multidisciplinar; compresión intensiva.',
+        'Evaluación venosa avanzada y terapias especializadas.',
+        'Seguimiento estrecho y control de complicaciones.'
+      ]
+    }
+  }[band];
+
+  const extraUlcer = ulcer ? [
+    '<strong>Si hay úlcera activa:</strong> cura avanzada de heridas, compresión efectiva, descarga/elevación y coordinación con unidad de heridas.',
+  ] : [];
+
+  const box = $('#recBox');
+  box.innerHTML = `
+    <p style="margin:.25rem 0 .5rem"><strong>${map.title}:</strong></p>
+    <ul style="margin:0; padding-left:1.1rem">
+      ${[...map.items, ...extraUlcer].map(it=>`<li>${it}</li>`).join('')}
+    </ul>
+    <p class="muted" style="margin:.6rem 0 0">⚠️ Recomendaciones orientativas. Individualizar con CEAP y guías locales; material informativo.</p>
+  `;
+}
+
+function updateUI(){
+  const total = computeTotal();
+  scoreVal.textContent = String(total);
+  setBand(total);
+  computeCounters();
+  validateForm();
+  setRecommendations(total);
+}
+
+/* ===== Snapshot por extremidad y reporte ===== */
+function snapshot(side){
+  const all = [...groups.core, ...groups.ulcer, ...groups.comp];
+  const data = {
+    fecha: new Date().toISOString(),
+    paciente: $('#paciente').value || null,
+    id: $('#idpac').value || null,
+    ceap: $('#ceap').value || null,
+    extremidad: side,
+    items: Object.fromEntries(all.map(k=>[k, getVal(k)])),
+    ulcer_activa: hasUlcer(),
+    puntuacion: Number($('#scoreVal').textContent),
+    banda: $('#bandLabel').textContent
+  };
+  return data;
+}
+function renderReportTable(){
+  const t = $('#reportTable');
+  const rows = ['Izquierda','Derecha'].filter(k=>!!report[k]).map(k=>{
+    const r = report[k];
+    const coreSum = groups.core.reduce((a,k)=>a+r.items[k],0);
+    const ulcSum  = groups.ulcer.reduce((a,k)=>a+r.items[k],0);
+    const compVal = r.items.comp;
+    return `
+      <tr>
+        <td>${k}</td>
+        <td>${r.puntuacion}</td>
+        <td>${r.banda}</td>
+        <td>${r.ulcer_activa ? 'Sí' : 'No'}</td>
+        <td>${coreSum}</td>
+        <td>${ulcSum}</td>
+        <td>${compVal}</td>
+      </tr>
+    `;
+  }).join('');
+  if(!rows){
+    t.innerHTML = 'Todavía no hay miembros guardados. Usa “Guardar miembro en informe”.';
+    return;
+  }
+  t.innerHTML = `
+    <div class="scroll">
+      <table style="width:100%; border-collapse:collapse">
+        <thead>
+          <tr style="text-align:left; border-bottom:1px solid ${getComputedStyle(document.body).getPropertyValue('--border')}">
+            <th style="padding:.4rem .3rem">Miembro</th>
+            <th style="padding:.4rem .3rem">VCSS total</th>
+            <th style="padding:.4rem .3rem">Banda</th>
+            <th style="padding:.4rem .3rem">Úlcera activa</th>
+            <th style="padding:.4rem .3rem">Núcleo (suma)</th>
+            <th style="padding:.4rem .3rem">Úlcera (suma)</th>
+            <th style="padding:.4rem .3rem">Compresión</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+/* ===== Export / PDF ===== */
+function exportJSON(){
+  const payload = {
+    generado: new Date().toISOString(),
+    paciente: $('#paciente').value || null,
+    id: $('#idpac').value || null,
+    ceap: $('#ceap').value || null,
+    logo_embebido: !!logoDataURL,
+    miembros: report
+  };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `vcss_informe_${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+function genPDF(){
+  // Cabecera: fecha, logo, paciente
+  $('#printDate').textContent = new Date().toLocaleString();
+  const name = $('#paciente').value || '—';
+  const id = $('#idpac').value || '—';
+  const ceap = $('#ceap').value || '—';
+  $('#printPatient').innerHTML = `Paciente: <strong>${name}</strong><br>ID/HC: <strong>${id}</strong><br>CEAP (C): <strong>${ceap}</strong>`;
+  const logoEl = $('#printLogo');
+  if(logoDataURL){ logoEl.src = logoDataURL; logoEl.style.display='block'; }
+  else { logoEl.removeAttribute('src'); logoEl.style.display='none'; }
+  window.print();
+}
+
+/* ===== Events & Init ===== */
+$$('input, select').forEach(el=>el.addEventListener('change', updateUI));
+$('#btnClear').addEventListener('click', ()=>{
+  [...groups.core, ...groups.ulcer, ...groups.comp].forEach(k=>{
+    $(`input[name="${k}"][value="0"]`).checked = true;
+  });
+  $('#lado').value='NA'; $('#ceap').value=''; $('#paciente').value=''; $('#idpac').value='';
+  updateUI();
+});
+$('#btnSaveSide').addEventListener('click', ()=>{
+  const side = $('#lado').value;
+  if(side==='NA'){
+    validator.innerHTML = 'Selecciona la <strong>extremidad</strong> antes de guardar.';
+    validator.classList.add('show'); return;
+  }
+  report[side] = snapshot(side);
+  renderReportTable();
+  validator.classList.remove('show'); validator.innerHTML='';
+});
+$('#btnJSON').addEventListener('click', exportJSON);
+$('#btnPDF').addEventListener('click', genPDF);
+
+// Logo uploader -> DataURL para incrustar en PDF
+$('#logoInput').addEventListener('change', (e)=>{
+  const f = e.target.files?.[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{ logoDataURL = rd.result; };
+  rd.readAsDataURL(f);
+});
+
+// Init
+updateUI(); renderReportTable();
+</script>
+</body>
+</html>

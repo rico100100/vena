@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Número de Reynolds en Flujo Turbulento y Normal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <h1 class="main-title">El Número de Reynolds en Flujo Turbulento y Normal</h1>
+            <div class="nav-menu">
+                <a href="#introduccion" class="nav-link">Introducción</a>
+                <a href="#definicion" class="nav-link">Definición</a>
+                <a href="#calculadora" class="nav-link">Calculadora</a>
+                <a href="#clasificacion" class="nav-link">Clasificación</a>
+                <a href="#aplicaciones" class="nav-link">Aplicaciones</a>
+                <a href="#bibliografia" class="nav-link">Bibliografía</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <section id="introduccion" class="section">
+            <div class="container">
+                <h2>1. Introducción y Resumen Ejecutivo</h2>
+                <div class="intro-card">
+                    <p class="lead">El número de Reynolds (Re) es un parámetro adimensional fundamental en mecánica de fluidos que determina el régimen de flujo en sistemas cardiovasculares. Su comprensión es crucial para el diagnóstico y tratamiento de patologías vasculares.</p>
+                    
+                    <div class="highlight-box">
+                        <h3>Puntos Clave</h3>
+                        <ul>
+                            <li>Predice la transición entre flujo laminar y turbulento</li>
+                            <li>Esencial para interpretación de estudios Doppler</li>
+                            <li>Crítico en el diseño de prótesis cardiovasculares</li>
+                            <li>Fundamental para comprender la fisiopatología vascular</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="definicion" class="section">
+            <div class="container">
+                <h2>2. Definición y Fundamentos Teóricos</h2>
+                <div class="theory-content">
+                    <div class="formula-box">
+                        <h3>Fórmula del Número de Reynolds</h3>
+                        <div class="formula-display">
+                            $$Re = \frac{\rho \cdot v \cdot D}{\mu} = \frac{v \cdot D}{\nu}$$
+                        </div>
+                        <div class="formula-legend">
+                            <p><strong>Donde:</strong></p>
+                            <ul>
+                                <li><strong>ρ</strong> = Densidad del fluido (kg/m³)</li>
+                                <li><strong>v</strong> = Velocidad media del flujo (m/s)</li>
+                                <li><strong>D</strong> = Diámetro del vaso (m)</li>
+                                <li><strong>μ</strong> = Viscosidad dinámica (Pa·s)</li>
+                                <li><strong>ν</strong> = Viscosidad cinemática (m²/s)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="properties-card">
+                        <h3>Propiedades de la Sangre Humana</h3>
+                        <div class="properties-grid">
+                            <div class="property">
+                                <span class="property-label">Densidad:</span>
+                                <span class="property-value">1050 kg/m³</span>
+                            </div>
+                            <div class="property">
+                                <span class="property-label">Viscosidad dinámica:</span>
+                                <span class="property-value">0.0035 Pa·s</span>
+                            </div>
+                            <div class="property">
+                                <span class="property-label">Viscosidad cinemática:</span>
+                                <span class="property-value">3.33×10⁻⁶ m²/s</span>
+                            </div>
+                            <div class="property">
+                                <span class="property-label">Temperatura:</span>
+                                <span class="property-value">37°C</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="calculadora" class="section calculator-section">
+            <div class="container">
+                <h2>3. Calculadora Interactiva del Número de Reynolds</h2>
+                <div class="calculator-container">
+                    <div class="calculator-inputs">
+                        <h3>Parámetros de Entrada</h3>
+                        <div class="input-group">
+                            <label for="density">Densidad (kg/m³)</label>
+                            <input type="number" id="density" value="1050" step="0.1" min="900" max="1200">
+                            <small>Rango normal: 1045-1055 kg/m³</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="velocity">Velocidad (cm/s)</label>
+                            <input type="number" id="velocity" value="30" step="0.1" min="0" max="300">
+                            <small>Velocidad media del flujo sanguíneo</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="diameter">Diámetro (mm)</label>
+                            <input type="number" id="diameter" value="5.0" step="0.1" min="0.1" max="50">
+                            <small>Diámetro interno del vaso</small>
+                        </div>
+                        <div class="input-group">
+                            <label for="viscosity">Viscosidad dinámica (mPa·s)</label>
+                            <input type="number" id="viscosity" value="3.5" step="0.01" min="1" max="10">
+                            <small>Rango normal: 3.0-4.0 mPa·s</small>
+                        </div>
+                    </div>
+
+                    <div class="calculator-results">
+                        <h3>Resultados</h3>
+                        <div class="result-display">
+                            <div class="reynolds-number">
+                                <span class="result-label">Número de Reynolds:</span>
+                                <span id="reynolds-value" class="result-value">450</span>
+                            </div>
+                            <div class="flow-type">
+                                <span class="result-label">Tipo de Flujo:</span>
+                                <span id="flow-type" class="result-value flow-laminar">Laminar</span>
+                            </div>
+                            <div class="clinical-interpretation">
+                                <h4>Interpretación Clínica:</h4>
+                                <p id="clinical-text">Flujo estable y ordenado. Condiciones normales para la mayoría de vasos sanguíneos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="clasificacion" class="section">
+            <div class="container">
+                <h2>4. Clasificación del Flujo</h2>
+                <div class="classification-grid">
+                    <div class="flow-card laminar">
+                        <h3>Flujo Laminar</h3>
+                        <div class="reynolds-range">Re < 2000</div>
+                        <p>Flujo ordenado en capas paralelas, sin mezcla entre capas. Perfil de velocidad parabólico típico de la ecuación de Poiseuille.</p>
+                        <div class="characteristics">
+                            <h4>Características:</h4>
+                            <ul>
+                                <li>Pérdidas de presión predecibles</li>
+                                <li>Flujo silencioso</li>
+                                <li>Distribución uniforme de nutrientes</li>
+                                <li>Menor daño endotelial</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="flow-card transition">
+                        <h3>Flujo de Transición</h3>
+                        <div class="reynolds-range">2000 < Re < 4000</div>
+                        <p>Flujo inestable que alterna entre patrones laminares y turbulentos, dependiendo de perturbaciones locales.</p>
+                        <div class="characteristics">
+                            <h4>Características:</h4>
+                            <ul>
+                                <li>Inestabilidad temporal</li>
+                                <li>Sensible a perturbaciones</li>
+                                <li>Soplos intermitentes</li>
+                                <li>Zona crítica diagnóstica</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="flow-card turbulent">
+                        <h3>Flujo Turbulento</h3>
+                        <div class="reynolds-range">Re > 4000</div>
+                        <p>Flujo caótico con formación de remolinos y mezcla completa. Perfil de velocidad aplanado con mayor disipación de energía.</p>
+                        <div class="characteristics">
+                            <h4>Características:</h4>
+                            <ul>
+                                <li>Pérdidas de presión elevadas</li>
+                                <li>Soplos audibles</li>
+                                <li>Mayor estrés de cizallamiento</li>
+                                <li>Riesgo de aterogénesis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="aplicaciones" class="section">
+            <div class="container">
+                <h2>5. Aplicaciones en Hemodinámica Vascular</h2>
+                <div class="applications-content">
+                    <div class="clinical-table-container">
+                        <h3>Valores Típicos en Diferentes Vasos</h3>
+                        <table class="clinical-table">
+                            <thead>
+                                <tr>
+                                    <th>Vaso Sanguíneo</th>
+                                    <th>Diámetro (mm)</th>
+                                    <th>Velocidad (cm/s)</th>
+                                    <th>Reynolds</th>
+                                    <th>Tipo de Flujo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Aorta ascendente (reposo)</td>
+                                    <td>25</td>
+                                    <td>25</td>
+                                    <td>1875</td>
+                                    <td class="flow-laminar">Laminar</td>
+                                </tr>
+                                <tr>
+                                    <td>Aorta ascendente (ejercicio)</td>
+                                    <td>25</td>
+                                    <td>60</td>
+                                    <td>4500</td>
+                                    <td class="flow-turbulent">Turbulento</td>
+                                </tr>
+                                <tr>
+                                    <td>Arteria carótida común</td>
+                                    <td>7</td>
+                                    <td>40</td>
+                                    <td>840</td>
+                                    <td class="flow-laminar">Laminar</td>
+                                </tr>
+                                <tr>
+                                    <td>Estenosis aórtica severa</td>
+                                    <td>5</td>
+                                    <td>180</td>
+                                    <td>2700</td>
+                                    <td class="flow-transition">Transición</td>
+                                </tr>
+                                <tr>
+                                    <td>Post-estenosis (50% oclusión)</td>
+                                    <td>8</td>
+                                    <td>150</td>
+                                    <td>3600</td>
+                                    <td class="flow-transition">Transición</td>
+                                </tr>
+                                <tr>
+                                    <td>Arteria coronaria (LAD)</td>
+                                    <td>3</td>
+                                    <td>20</td>
+                                    <td>180</td>
+                                    <td class="flow-laminar">Laminar</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="relevancia-clinica" class="section">
+            <div class="container">
+                <h2>6. Relevancia Clínica y Diagnóstica</h2>
+                <div class="clinical-relevance">
+                    <div class="relevance-grid">
+                        <div class="relevance-card">
+                            <h3>Diagnóstico por Ultrasonido Doppler</h3>
+                            <p>El análisis espectral Doppler permite identificar patrones de flujo turbulento mediante:</p>
+                            <ul>
+                                <li>Análisis del espectro de frecuencias</li>
+                                <li>Detección de aliasing</li>
+                                <li>Medición de índices de pulsatilidad</li>
+                                <li>Evaluación de gradientes de presión</li>
+                            </ul>
+                        </div>
+
+                        <div class="relevance-card">
+                            <h3>Interpretación de Soplos Cardíacos</h3>
+                            <p>La turbulencia se manifiesta acústicamente como soplos con características específicas:</p>
+                            <ul>
+                                <li>Soplos sistólicos en estenosis valvulares</li>
+                                <li>Soplos diastólicos en regurgitación</li>
+                                <li>Soplos continuos en comunicaciones</li>
+                                <li>Correlación con severidad anatómica</li>
+                            </ul>
+                        </div>
+
+                        <div class="relevance-card">
+                            <h3>Planificación Terapéutica</h3>
+                            <p>El conocimiento del flujo influye en decisiones clínicas:</p>
+                            <ul>
+                                <li>Timing de intervenciones valvulares</li>
+                                <li>Diseño de stents y prótesis</li>
+                                <li>Selección de anticoagulación</li>
+                                <li>Monitorización post-quirúrgica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="factores-modificadores" class="section">
+            <div class="container">
+                <h2>7. Factores Modificadores</h2>
+                <div class="factors-content">
+                    <div class="factor-category">
+                        <h3>Factores Fisiológicos</h3>
+                        <div class="factor-grid">
+                            <div class="factor-item">
+                                <h4>Hematocrito</h4>
+                                <p>↑ Hematocrito → ↑ Viscosidad → ↓ Reynolds</p>
+                                <small>Anemia: Re aumenta; Policitemia: Re disminuye</small>
+                            </div>
+                            <div class="factor-item">
+                                <h4>Temperatura Corporal</h4>
+                                <p>↑ Temperatura → ↓ Viscosidad → ↑ Reynolds</p>
+                                <small>Fiebre puede incrementar turbulencia</small>
+                            </div>
+                            <div class="factor-item">
+                                <h4>Estado de Hidratación</h4>
+                                <p>Deshidratación → ↑ Viscosidad → ↓ Reynolds</p>
+                                <small>Importante en pacientes críticos</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="factor-category">
+                        <h3>Factores Patológicos</h3>
+                        <div class="factor-grid">
+                            <div class="factor-item">
+                                <h4>Estenosis Arterial</h4>
+                                <p>↓ Diámetro + ↑ Velocidad → Re variable</p>
+                                <small>Jet de alta velocidad post-estenótico</small>
+                            </div>
+                            <div class="factor-item">
+                                <h4>Aneurismas</h4>
+                                <p>↑ Diámetro + ↓ Velocidad → ↓ Reynolds</p>
+                                <small>Predisposición a trombosis</small>
+                            </div>
+                            <div class="factor-item">
+                                <h4>Insuficiencia Cardíaca</h4>
+                                <p>↓ Gasto cardíaco → ↓ Velocidad → ↓ Reynolds</p>
+                                <small>Flujo más laminar en reposo</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="implicaciones" class="section">
+            <div class="container">
+                <h2>8. Implicaciones Fisiopatológicas</h2>
+                <div class="pathophysiology-content">
+                    <div class="implication-card">
+                        <h3>Aterogénesis y Flujo Turbulento</h3>
+                        <p>La turbulencia contribuye al desarrollo de aterosclerosis mediante múltiples mecanismos:</p>
+                        <div class="mechanism-list">
+                            <div class="mechanism">
+                                <h4>Disfunción Endotelial</h4>
+                                <p>El estrés de cizallamiento irregular altera la función endotelial, reduciendo la producción de óxido nítrico y aumentando la permeabilidad vascular.</p>
+                            </div>
+                            <div class="mechanism">
+                                <h4>Activación Plaquetaria</h4>
+                                <p>Las fuerzas de cizallamiento elevadas activan las plaquetas, incrementando el riesgo trombótico y la agregación celular.</p>
+                            </div>
+                            <div class="mechanism">
+                                <h4>Inflamación Local</h4>
+                                <p>La turbulencia promueve la expresión de moléculas de adhesión y la infiltración de células inflamatorias en la pared arterial.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="clinical-correlation">
+                        <h3>Correlaciones Clínicas</h3>
+                        <div class="correlation-grid">
+                            <div class="correlation-item">
+                                <span class="correlation-title">Bifurcaciones Arteriales</span>
+                                <span class="correlation-desc">Zonas de preferente desarrollo de placas ateroscleróticas</span>
+                            </div>
+                            <div class="correlation-item">
+                                <span class="correlation-title">Válvulas Cardíacas</span>
+                                <span class="correlation-desc">Degeneración acelerada en presencia de turbulencia crónica</span>
+                            </div>
+                            <div class="correlation-item">
+                                <span class="correlation-title">Prótesis Vasculares</span>
+                                <span class="correlation-desc">Diseño optimizado para minimizar turbulencia post-implante</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="metodologia" class="section">
+            <div class="container">
+                <h2>9. Metodología de Medición</h2>
+                <div class="methodology-content">
+                    <div class="method-category">
+                        <h3>Técnicas No Invasivas</h3>
+                        <div class="technique-grid">
+                            <div class="technique-card">
+                                <h4>Ultrasonido Doppler</h4>
+                                <div class="technique-details">
+                                    <p><strong>Principio:</strong> Efecto Doppler en eritrocitos en movimiento</p>
+                                    <p><strong>Ventajas:</strong> No ionizante, tiempo real, portátil</p>
+                                    <p><strong>Limitaciones:</strong> Dependiente del operador, ventana acústica</p>
+                                </div>
+                            </div>
+                            <div class="technique-card">
+                                <h4>Resonancia Magnética (4D Flow)</h4>
+                                <div class="technique-details">
+                                    <p><strong>Principio:</strong> Codificación de velocidad mediante gradientes</p>
+                                    <p><strong>Ventajas:</strong> Visualización 3D completa, cuantificación precisa</p>
+                                    <p><strong>Limitaciones:</strong> Costo elevado, tiempo de adquisición</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="method-category">
+                        <h3>Técnicas Invasivas</h3>
+                        <div class="technique-grid">
+                            <div class="technique-card">
+                                <h4>Cateterismo Cardíaco</h4>
+                                <div class="technique-details">
+                                    <p><strong>Principio:</strong> Medición directa de presiones y gradientes</p>
+                                    <p><strong>Aplicación:</strong> Evaluación de estenosis valvulares severas</p>
+                                    <p><strong>Cálculo:</strong> Ecuación de Bernoulli modificada</p>
+                                </div>
+                            </div>
+                            <div class="technique-card">
+                                <h4>Guías de Presión Intracoronaria</h4>
+                                <div class="technique-details">
+                                    <p><strong>Principio:</strong> Medición de gradientes translesionales</p>
+                                    <p><strong>Parámetros:</strong> FFR, iFR, índice de turbulencia</p>
+                                    <p><strong>Utilidad:</strong> Decisiones de revascularización</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="perspectivas" class="section">
+            <div class="container">
+                <h2>10. Perspectivas Futuras</h2>
+                <div class="future-content">
+                    <div class="future-grid">
+                        <div class="future-card">
+                            <h3>Inteligencia Artificial</h3>
+                            <p>Desarrollo de algoritmos de aprendizaje automático para:</p>
+                            <ul>
+                                <li>Análisis automatizado de patrones de flujo</li>
+                                <li>Predicción de complicaciones cardiovasculares</li>
+                                <li>Optimización de parámetros hemodinámicos</li>
+                                <li>Personalización de terapias</li>
+                            </ul>
+                        </div>
+
+                        <div class="future-card">
+                            <h3>Dispositivos Inteligentes</h3>
+                            <p>Nueva generación de implantes cardiovasculares:</p>
+                            <ul>
+                                <li>Stents con sensores de flujo integrados</li>
+                                <li>Válvulas adaptativas con control dinámico</li>
+                                <li>Prótesis vasculares bioactivas</li>
+                                <li>Sistemas de monitorización continua</li>
+                            </ul>
+                        </div>
+
+                        <div class="future-card">
+                            <h3>Medicina Personalizada</h3>
+                            <p>Enfoque individualizado basado en:</p>
+                            <ul>
+                                <li>Perfil hemodinámico específico del paciente</li>
+                                <li>Análisis genómico de factores de riesgo</li>
+                                <li>Modelos computacionales personalizados</li>
+                                <li>Biomarcadores de turbulencia</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusiones" class="section">
+            <div class="container">
+                <h2>11. Conclusiones</h2>
+                <div class="conclusions-content">
+                    <div class="conclusion-summary">
+                        <p class="lead">El número de Reynolds representa un parámetro fundamental para la comprensión de la hemodinámica cardiovascular, con implicaciones directas en el diagnóstico, tratamiento y pronóstico de enfermedades cardiovasculares.</p>
+                        
+                        <div class="key-conclusions">
+                            <div class="conclusion-item">
+                                <h3>Relevancia Diagnóstica</h3>
+                                <p>La caracterización del flujo mediante el número de Reynolds permite la identificación temprana de patologías vasculares y la optimización de técnicas de imagen cardiovascular.</p>
+                            </div>
+                            
+                            <div class="conclusion-item">
+                                <h3>Impacto Terapéutico</h3>
+                                <p>La comprensión de los patrones de flujo guía las decisiones clínicas en cuanto a timing de intervenciones, selección de dispositivos y estrategias de seguimiento.</p>
+                            </div>
+                            
+                            <div class="conclusion-item">
+                                <h3>Perspectiva Futura</h3>
+                                <p>Los avances en inteligencia artificial y dispositivos inteligentes prometen revolucionar la aplicación clínica de estos principios hemodinámicos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="bibliografia" class="section bibliography-section">
+            <div class="container">
+                <h2>12. Bibliografía</h2>
+                <div class="bibliography-content">
+                    <ol class="bibliography-list">
+                        <li>Repositorio Tec - Dinámica de fluidos viscosos. Instituto Tecnológico de Monterrey. <a href="https://repositorio.tec.mx" target="_blank">https://repositorio.tec.mx</a></li>
+                        <li>Radiopaedia - Reynolds number. Radiopaedia.org. <a href="https://radiopaedia.org" target="_blank">https://radiopaedia.org</a></li>
+                        <li>UNAM - Hemodinamia. Universidad Nacional Autónoma de México. <a href="https://www.unam.mx" target="_blank">https://www.unam.mx</a></li>
+                        <li>Elsevier - Caracterización del flujo pulsante vascular. Journal of Biomechanics. <a href="https://www.elsevier.com" target="_blank">https://www.elsevier.com</a></li>
+                        <li>Wikipedia - Número de Reynolds. <a href="https://es.wikipedia.org/wiki/Número_de_Reynolds" target="_blank">https://es.wikipedia.org</a></li>
+                        <li>EBSCO Research Starters - Reynolds number. Academic Search Complete. <a href="https://www.ebsco.com" target="_blank">https://www.ebsco.com</a></li>
+                        <li>PMC - Numerical analysis of turbulence transition. PubMed Central. <a href="https://www.ncbi.nlm.nih.gov/pmc/" target="_blank">https://www.ncbi.nlm.nih.gov/pmc/</a></li>
+                        <li>Osmosis - Laminar flow and Reynolds number. <a href="https://www.osmosis.org" target="_blank">https://www.osmosis.org</a></li>
+                        <li>CV Physiology - Turbulent Flow. Cardiovascular Physiology Concepts. <a href="https://www.cvphysiology.com" target="_blank">https://www.cvphysiology.com</a></li>
+                        <li>Nature - Physiologic blood flow is turbulent. Nature Medicine. <a href="https://www.nature.com" target="_blank">https://www.nature.com</a></li>
+                        <li>Thoracic Key - Hemodynamics. <a href="https://thoracickey.com" target="_blank">https://thoracickey.com</a></li>
+                        <li>StudySmarter - Número de Reynolds. <a href="https://www.studysmarter.es" target="_blank">https://www.studysmarter.es</a></li>
+                        <li>PMC - Medical Doppler Ultrasonography. PubMed Central. <a href="https://www.ncbi.nlm.nih.gov/pmc/" target="_blank">https://www.ncbi.nlm.nih.gov/pmc/</a></li>
+                        <li>Revista Española de Cardiología - Guía ESC 2021. <a href="https://www.revespcardiol.org" target="_blank">https://www.revespcardiol.org</a></li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025. Material educativo sobre Hemodinámica Cardiovascular.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escalas de Riesgo de Sangrado en Anticoagulación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #111827;
+            color: #f3f4f6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        h1, h2, h3 {
+            color: #60a5fa;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .gold-card {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .gold-card h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #374151;
+        }
+
+        th {
+            background: #1f2937;
+        }
+
+        tr:hover {
+            background: #374151;
+        }
+
+        .score-card {
+            background: #1f2937;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .score-card h3 {
+            margin-bottom: 15px;
+        }
+
+        .calculator {
+            background: #111827;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #60a5fa;
+            margin-top: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #374151;
+            margin-bottom: 15px;
+            background: #1f2937;
+            color: #f3f4f6;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #60a5fa;
+        }
+
+        .btn {
+            background: #2563eb;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #065f46;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .bibliography {
+            background: #1f2937;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+
+        .bibliography p {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Escalas de Riesgo de Sangrado en Anticoagulación</h1>
+
+        <div class="gold-card">
+            <h2>HAS-BLED: Gold Standard</h2>
+            <p>Mayor evidencia, fácil aplicación (9 ítems), AUC 0.75 y validación múltiple.</p>
+        </div>
+
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Escala</th>
+                        <th>Población Objetivo</th>
+                        <th>AUC</th>
+                        <th>Facilidad</th>
+                        <th>Calidad Evidencia</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>HAS-BLED</td>
+                        <td>Fibrilación Auricular</td>
+                        <td>0.75</td>
+                        <td>Muy Fácil</td>
+                        <td>Excelente</td>
+                        <td><strong>9.2</strong></td>
+                    </tr>
+                    <tr>
+                        <td>CRUSADE</td>
+                        <td>SCA sin ST</td>
+                        <td>0.77-0.82</td>
+                        <td>Moderada</td>
+                        <td>Muy Buena</td>
+                        <td><strong>8.8</strong></td>
+                    </tr>
+                    <tr>
+                        <td>RIETE</td>
+                        <td>ETV</td>
+                        <td>0.78</td>
+                        <td>Fácil</td>
+                        <td>Muy Buena</td>
+                        <td><strong>8.5</strong></td>
+                    </tr>
+                    <tr>
+                        <td>ORBIT</td>
+                        <td>Fibrilación Auricular</td>
+                        <td>0.69-0.74</td>
+                        <td>Muy Fácil</td>
+                        <td>Buena</td>
+                        <td><strong>7.5</strong></td>
+                    </tr>
+                    <tr>
+                        <td>ACUITY</td>
+                        <td>SCA</td>
+                        <td>0.73</td>
+                        <td>Moderada</td>
+                        <td>Buena</td>
+                        <td><strong>7.0</strong></td>
+                    </tr>
+                    <tr>
+                        <td>ACTION</td>
+                        <td>SCA</td>
+                        <td>0.80</td>
+                        <td>Moderada</td>
+                        <td>Moderada</td>
+                        <td><strong>6.8</strong></td>
+                    </tr>
+                    <tr>
+                        <td>ATRIA</td>
+                        <td>Fibrilación Auricular</td>
+                        <td>0.60</td>
+                        <td>Fácil</td>
+                        <td>Moderada</td>
+                        <td><strong>6.0</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- HAS-BLED Calculator -->
+        <div class="score-card">
+            <h3>Calculadora HAS-BLED</h3>
+            <div class="calculator">
+                <label for="hta">Hipertensión:</label>
+                <select id="hta"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="renal">Función Renal Anormal:</label>
+                <select id="renal"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="hepatica">Función Hepática Anormal:</label>
+                <select id="hepatica"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="ictus">Ictus Previo:</label>
+                <select id="ictus"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="sangrado">Sangrado Previo:</label>
+                <select id="sangrado"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="inr">INR Lábil:</label>
+                <select id="inr"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="edad">Edad &gt; 65 años:</label>
+                <select id="edad"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="farmacos">Fármacos Predisponentes:</label>
+                <select id="farmacos"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <label for="alcohol">Alcohol:</label>
+                <select id="alcohol"><option value="1" selected="selected">Sí</option><option value="0">No</option></select>
+
+                <button class="btn" onclick="calcHASBLED()">Calcular</button>
+
+                <div id="res-hasbled" class="result" style="display: block;"><p><strong>Puntuación:</strong> 9/9</p><p><strong>Riesgo:</strong> Alto</p><p><strong>Tasa anual estimada:</strong> 4.9-19.6%</p></div>
+            </div>
+        </div>
+
+        <!-- Bibliografía -->
+        <div class="bibliography">
+            <h3>Bibliografía (APA 7)</h3>
+            <p>Apostolakis, S., Lane, D. A., Guo, Y., y Lip, G. Y. H. 
+(2013). Performance of the HEMORR2HAGES, ATRIA, HAS-BLED, and ORBIT 
+bleeding risk scores. <em>Journal of the American College of Cardiology, 61</em>(2), 190-199.</p>
+            <p>Subherwal, S., Bach, R. G., Chen, A. Y., et al. (2009). 
+Baseline risk of major bleeding in non-ST-segment elevation myocardial 
+infarction. <em>Circulation, 119</em>(14), 1873-1882.</p>
+            <p>Ruiz-Giménez, N., Suárez, C., González, R., et al. 
+(2008). Predictive variables for major bleeding events in patients 
+presenting with VTE. <em>Thrombosis and Haemostasis, 100</em>(1), 26-31.</p>
+            <p>O’Brien, E. C., Simon, D. N., Udaltsova, N., et al. (2015). The ORBIT bleeding risk score. <em>European Heart Journal, 36</em>(20), 3258-3264.</p>
+            <p>Nieto, P. A., Ortiz Gómez, S., Ruiz-Talero, P., &amp; Muñoz, O. (2024). Validation of the RIETE model. <em>Journal of Thrombosis and Haemostasis</em>, 22(8), 1234-1245.</p>
+        </div>
+    </div>
+
+    <script>
+        function calcHASBLED() {
+            const ids = ['hta', 'renal', 'hepatica', 'ictus', 'sangrado', 'inr', 'edad', 'farmacos', 'alcohol'];
+            let score = 0;
+            ids.forEach(id => score += parseInt(document.getElementById(id).value));
+
+            let risk = '';
+            let annualRate = '';
+
+            if (score <= 1) {
+                risk = 'Bajo';
+                annualRate = '0.6-1.3%';
+            } else if (score === 2) {
+                risk = 'Moderado';
+                annualRate = '1.9-3.2%';
+            } else {
+                risk = 'Alto';
+                annualRate = '4.9-19.6%';
+            }
+
+            document.getElementById('res-hasbled').innerHTML = `<p><strong>Puntuación:</strong> ${score}/9</p><p><strong>Riesgo:</strong> ${risk}</p><p><strong>Tasa anual estimada:</strong> ${annualRate}</p>`;
+            document.getElementById('res-hasbled').style.display = 'block';
+        }
+    </script>
+
+</body></html>
